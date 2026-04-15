@@ -51,9 +51,10 @@ let topoCache: Topology | null = null;
 interface Props {
   distritos: DistritoRegional[];
   onSelect: (d: DistritoRegional) => void;
+  onHover?: (d: DistritoRegional | null) => void;
 }
 
-export function MapPartidos({ distritos, onSelect }: Props) {
+export function MapPartidos({ distritos, onSelect, onHover }: Props) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
@@ -115,6 +116,17 @@ export function MapPartidos({ distritos, onSelect }: Props) {
           const deptName = match[i];
           const dist = deptName ? distByName[deptName] : null;
           if (dist) onSelect(dist);
+        })
+        .on('mouseenter', function (this: any, _e, d: any) {
+          const i = features.indexOf(d);
+          const deptName = match[i];
+          const dist = deptName ? distByName[deptName] : null;
+          d3.select(this).attr('stroke', '#000').attr('stroke-width', 2);
+          if (dist) onHover?.(dist);
+        })
+        .on('mouseleave', function (this: any) {
+          d3.select(this).attr('stroke', '#0f1117').attr('stroke-width', 0.5);
+          onHover?.(null);
         });
 
       // Etiquetas: ganador + escaños asignados

@@ -286,11 +286,11 @@
     {
       "name": "Extranjero",
       "pct": 44.829,
-      "fujimori": 15.809,
-      "rla": 29.224,
-      "sanchez": 2.344,
-      "nieto": 10.928,
-      "belmont": 8.9,
+      "fujimori": 15.803,
+      "rla": 29.247,
+      "sanchez": 2.342,
+      "nieto": 10.924,
+      "belmont": 8.895,
       "actasRevisadas": 1140,
       "actasTotal": 2543
     }
@@ -298,11 +298,11 @@
   "extranjero": {
     "name": "Extranjero",
     "pct": 44.829,
-    "fujimori": 15.809,
-    "rla": 29.224,
-    "sanchez": 2.344,
-    "nieto": 10.928,
-    "belmont": 8.9,
+    "fujimori": 15.803,
+    "rla": 29.247,
+    "sanchez": 2.342,
+    "nieto": 10.924,
+    "belmont": 8.895,
     "actasRevisadas": 1140,
     "actasTotal": 2543
   },
@@ -449,6 +449,6 @@
     "nieto": 0,
     "belmont": 0
   },
-  "_scrapedAt": "2026-04-15T22:21:17.288Z",
+  "_scrapedAt": "2026-04-15T22:26:56.275Z",
   "_source": "resultadoelectoral.onpe.gob.pe"
 }
