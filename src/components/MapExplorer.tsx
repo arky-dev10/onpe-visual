@@ -145,7 +145,7 @@ export function MapExplorer({ data, onSeatClick }: Props) {
                   deptNombre={dept.nombre}
                   provincias={provincias}
                   colorOf={presidencialColorOf}
-                  onHover={setSelProv}
+                  onHover={() => {}}
                 />
               )}
               {!loadingProv && !provincias && (
@@ -166,7 +166,6 @@ export function MapExplorer({ data, onSeatClick }: Props) {
             <DistritoPanel
               distrito={dept}
               provincias={provincias}
-              selProv={selProv}
               onSeatClick={onSeatClick}
               onBack={goToPais}
             />
@@ -253,52 +252,16 @@ const PaisPanel = memo(function PaisPanel({ data, hoverDept, onPick }: { data: D
 });
 
 // ───────────────── Panel nivel distrito ─────────────────
-const DistritoPanel = memo(function DistritoPanel({ distrito: d, provincias, selProv, onSeatClick, onBack }: {
+const DistritoPanel = memo(function DistritoPanel({ distrito: d, provincias, onSeatClick, onBack }: {
   distrito: DistritoDiputados;
   provincias: Provincia[] | null;
-  selProv: Provincia | null;
   onSeatClick: (s: SeatInfo) => void;
   onBack: () => void;
 }) {
   const partidosConEscanos = d.partidos.filter(p => p.escanos > 0);
   const asignacion = Object.fromEntries(d.partidos.map(p => [p.codigo, p.escanos]));
 
-  // Si hay hover sobre una provincia, mostrar detalle de esa provincia
-  if (selProv) {
-    return (
-      <div className="panel-wrap">
-        <button onClick={onBack} className="panel-back">‹ Perú</button>
-        <div className="panel-kicker" style={{ color: selProv.ganador ? (PRESIDENCIAL_COLORS[selProv.ganador.codigo] || '#6b7280') : 'var(--tx3)' }}>
-          PROVINCIA · {d.nombre.toUpperCase()}
-        </div>
-        <div className="panel-title">{selProv.nombre}</div>
-        <div className="panel-sub">actas {selProv.pctActas.toFixed(1)}% · {selProv.votosEmitidos.toLocaleString('es-PE')} votos emitidos</div>
-
-        <div className="panel-subtitle">Resultado presidencial</div>
-        <div style={{ marginTop: 6 }}>
-          {selProv.partidos.slice(0, 5).map(p => {
-            const color = PRESIDENCIAL_COLORS[p.codigo] || '#6b7280';
-            const pctMax = selProv.partidos[0].pct || 1;
-            return (
-              <div key={p.codigo} style={{ marginBottom: 8 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 3 }}>
-                  <span style={{ fontWeight: 600, color }}>
-                    {p.candidato ? p.candidato.split(' ').slice(0, 3).join(' ') : nombreCorto(p.partido)}
-                  </span>
-                  <span style={{ fontFamily: 'DM Mono', fontWeight: 700, color }}>{p.pct.toFixed(2)}%</span>
-                </div>
-                <div style={{ height: 6, background: 'var(--bg-alt)', borderRadius: 3 }}>
-                  <div style={{ height: '100%', width: `${(p.pct / pctMax) * 100}%`, background: color, borderRadius: 3, transition: 'width .4s' }} />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  }
-
-  // Estado normal del distrito: muestra hemiciclo + electos
+  // Panel siempre muestra info del distrito de diputados (presidencial va en otra página)
   return (
     <div className="panel-wrap">
       <button onClick={onBack} className="panel-back">‹ Perú</button>

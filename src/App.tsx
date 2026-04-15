@@ -5,9 +5,8 @@ import { StatusBar } from './components/StatusBar';
 import { Tabs, type TabId } from './components/Tabs';
 import { CandidateStrip } from './components/CandidateStrip';
 import { ProbabilityBar } from './components/ProbabilityBar';
-import { MapDept } from './components/MapDept';
+import { PresidencialExplorer } from './components/PresidencialExplorer';
 import { ProjectionChart } from './components/ProjectionChart';
-import { RegionModal } from './components/RegionModal';
 import { SecondRoundBanner } from './components/SecondRoundBanner';
 import { CriticalGap } from './components/CriticalGap';
 import { HeaderGoberna } from './components/HeaderGoberna';
@@ -18,7 +17,7 @@ import { loadData } from './data/source';
 import { useTheme } from './components/ThemeToggle';
 import type { DashboardData } from './types';
 import { CAND_ORDER } from './data/candidates';
-import type { RegionResult, CandKey } from './types';
+import type { CandKey } from './types';
 
 const PARTY_MAP: Record<CandKey, { party: string; initials: string }> = {
   fujimori: { party: 'Fuerza Popular',      initials: 'KF'  },
@@ -48,7 +47,6 @@ function App() {
     return () => window.removeEventListener('hashchange', onHash);
   }, []);
   const [loading, setLoading] = useState(false);
-  const [selected, setSelected] = useState<RegionResult | null>(null);
   const [onpeData, setOnpeData] = useState<DashboardData>(MOCK_ONPE);
   const [datumData, setDatumData] = useState<DashboardData>(MOCK_DATUM);
 
@@ -136,20 +134,15 @@ function App() {
       <CandidateStrip values={current} deltas={deltas} small={small} />
       <ProbabilityBar probs={data.probabilities} />
 
-      <div className="grid-2">
-        <div className="card">
-          <div className="card-title">Mapa — Ganador por departamento ({sourceLabel})</div>
-          <div className="card-sub">Contabilizados: {data.votosEmitidos.toLocaleString('es-PE')} · −{data.votosFaltantes.toLocaleString('es-PE')}</div>
-          <MapDept key={tab} regions={data.regions} source={sourceLabel} onSelect={setSelected} />
-        </div>
-        <div className="card">
-          <div className="card-title">Evolución del conteo + Proyección al 100%</div>
-          <div className="card-sub">Últimos cortes ONPE · línea punteada = proyección</div>
-          <ProjectionChart series={data.series} projection={data.projection} currentPct={data.pctActas} />
-        </div>
+      <div style={{ marginBottom: 16 }}>
+        <PresidencialExplorer key={tab} regions={data.regions} source={sourceLabel} />
       </div>
 
-      <RegionModal region={selected} source={sourceLabel} onClose={() => setSelected(null)} />
+      <div className="card">
+        <div className="card-title">Evolución del conteo + Proyección al 100%</div>
+        <div className="card-sub">Últimos cortes ONPE · línea punteada = proyección</div>
+        <ProjectionChart series={data.series} projection={data.projection} currentPct={data.pctActas} />
+      </div>
       </div>
     </>
   );

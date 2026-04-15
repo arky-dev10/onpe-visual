@@ -1,12 +1,12 @@
 {
-  "pctActas": 91.634,
-  "actasRevisadas": 85005,
+  "pctActas": 91.646,
+  "actasRevisadas": 85016,
   "actasTotal": 92766,
-  "votosEmitidos": 18569235,
-  "votosFaltantes": 1553502,
+  "votosEmitidos": 18571690,
+  "votosFaltantes": 1551479,
   "proximoRefresh": "4:00",
-  "fechaActualizacion": "15-abr., 05:17 p. m.",
-  "jeeStatus": "4,680 actas en JEE",
+  "fechaActualizacion": "15-abr., 05:22 p. m.",
+  "jeeStatus": "4,681 actas en JEE",
   "regions": [
     {
       "name": "Amazonas",
@@ -78,10 +78,10 @@
       "name": "Callao",
       "pct": 95.1,
       "fujimori": 20.661,
-      "rla": 15.01,
-      "sanchez": 2.998,
-      "nieto": 15.036,
-      "belmont": 8.137,
+      "rla": 15.008,
+      "sanchez": 2.999,
+      "nieto": 15.035,
+      "belmont": 8.139,
       "actasRevisadas": 2756,
       "actasTotal": 2898
     },
@@ -286,11 +286,11 @@
     {
       "name": "Extranjero",
       "pct": 44.868,
-      "fujimori": 15.803,
-      "rla": 29.247,
-      "sanchez": 2.342,
-      "nieto": 10.924,
-      "belmont": 8.895,
+      "fujimori": 15.801,
+      "rla": 29.267,
+      "sanchez": 2.341,
+      "nieto": 10.922,
+      "belmont": 8.891,
       "actasRevisadas": 1141,
       "actasTotal": 2543
     }
@@ -298,11 +298,11 @@
   "extranjero": {
     "name": "Extranjero",
     "pct": 44.868,
-    "fujimori": 15.803,
-    "rla": 29.247,
-    "sanchez": 2.342,
-    "nieto": 10.924,
-    "belmont": 8.895,
+    "fujimori": 15.801,
+    "rla": 29.267,
+    "sanchez": 2.341,
+    "nieto": 10.922,
+    "belmont": 8.891,
     "actasRevisadas": 1141,
     "actasTotal": 2543
   },
@@ -310,137 +310,137 @@
     {
       "pct": 21.6,
       "fujimori": 15.849060000000001,
-      "rla": 11.25465,
-      "sanchez": 10.62424,
-      "nieto": 11.27814,
+      "rla": 11.256549999999999,
+      "sanchez": 10.62336,
+      "nieto": 11.27916,
       "belmont": 10.153
     },
     {
       "pct": 26.3,
       "fujimori": 15.928589333333337,
-      "rla": 11.294139999999999,
-      "sanchez": 10.720824,
-      "nieto": 11.263397333333334,
+      "rla": 11.296046666666665,
+      "sanchez": 10.719935999999999,
+      "nieto": 11.264415999999999,
       "belmont": 10.153
     },
     {
       "pct": 31,
       "fujimori": 16.008118666666668,
-      "rla": 11.33363,
-      "sanchez": 10.817408,
-      "nieto": 11.248654666666669,
+      "rla": 11.335543333333334,
+      "sanchez": 10.816512,
+      "nieto": 11.249672,
       "belmont": 10.153
     },
     {
       "pct": 35.6,
       "fujimori": 16.087648,
-      "rla": 11.373119999999998,
-      "sanchez": 10.913992,
-      "nieto": 11.233912,
+      "rla": 11.37504,
+      "sanchez": 10.913088,
+      "nieto": 11.234928,
       "belmont": 10.153
     },
     {
       "pct": 40.3,
       "fujimori": 16.167177333333335,
-      "rla": 11.412609999999999,
-      "sanchez": 11.010576,
-      "nieto": 11.219169333333333,
+      "rla": 11.414536666666667,
+      "sanchez": 11.009663999999999,
+      "nieto": 11.220184,
       "belmont": 10.153
     },
     {
       "pct": 45,
       "fujimori": 16.246706666666668,
-      "rla": 11.452099999999998,
-      "sanchez": 11.10716,
-      "nieto": 11.204426666666668,
+      "rla": 11.454033333333332,
+      "sanchez": 11.10624,
+      "nieto": 11.205440000000001,
       "belmont": 10.153
     },
     {
       "pct": 49.6,
       "fujimori": 16.326236,
-      "rla": 11.491589999999999,
-      "sanchez": 11.203744,
-      "nieto": 11.189684,
+      "rla": 11.49353,
+      "sanchez": 11.202815999999999,
+      "nieto": 11.190695999999999,
       "belmont": 10.153
     },
     {
       "pct": 54.3,
       "fujimori": 16.405765333333335,
-      "rla": 11.53108,
-      "sanchez": 11.300328,
-      "nieto": 11.174941333333333,
+      "rla": 11.533026666666666,
+      "sanchez": 11.299392,
+      "nieto": 11.175951999999999,
       "belmont": 10.153
     },
     {
       "pct": 59,
       "fujimori": 16.485294666666668,
-      "rla": 11.570569999999998,
-      "sanchez": 11.396912,
-      "nieto": 11.160198666666668,
+      "rla": 11.572523333333333,
+      "sanchez": 11.395967999999998,
+      "nieto": 11.161208,
       "belmont": 10.153
     },
     {
       "pct": 63.6,
       "fujimori": 16.564824,
-      "rla": 11.610059999999999,
-      "sanchez": 11.493496,
-      "nieto": 11.145456000000001,
+      "rla": 11.61202,
+      "sanchez": 11.492543999999999,
+      "nieto": 11.146464,
       "belmont": 10.153
     },
     {
       "pct": 68.3,
       "fujimori": 16.644353333333335,
-      "rla": 11.64955,
-      "sanchez": 11.59008,
-      "nieto": 11.130713333333333,
+      "rla": 11.651516666666666,
+      "sanchez": 11.58912,
+      "nieto": 11.13172,
       "belmont": 10.153
     },
     {
       "pct": 73,
       "fujimori": 16.72388266666667,
-      "rla": 11.689039999999999,
-      "sanchez": 11.686664,
-      "nieto": 11.115970666666668,
+      "rla": 11.691013333333332,
+      "sanchez": 11.685695999999998,
+      "nieto": 11.116976000000001,
       "belmont": 10.153
     },
     {
       "pct": 77.6,
       "fujimori": 16.803412,
-      "rla": 11.72853,
-      "sanchez": 11.783248,
-      "nieto": 11.101228,
+      "rla": 11.73051,
+      "sanchez": 11.782271999999999,
+      "nieto": 11.102231999999999,
       "belmont": 10.153
     },
     {
       "pct": 82.3,
       "fujimori": 16.882941333333335,
-      "rla": 11.768019999999998,
-      "sanchez": 11.879832,
-      "nieto": 11.086485333333332,
+      "rla": 11.770006666666667,
+      "sanchez": 11.878848,
+      "nieto": 11.087487999999999,
       "belmont": 10.153
     },
     {
       "pct": 87,
       "fujimori": 16.96247066666667,
-      "rla": 11.807509999999999,
-      "sanchez": 11.976416,
-      "nieto": 11.071742666666667,
+      "rla": 11.809503333333332,
+      "sanchez": 11.975423999999999,
+      "nieto": 11.072744,
       "belmont": 10.153
     }
   ],
   "projection": {
     "fujimori": 17.042,
-    "rla": 11.847,
-    "sanchez": 12.073,
-    "nieto": 11.057,
+    "rla": 11.849,
+    "sanchez": 12.072,
+    "nieto": 11.058,
     "belmont": 10.153
   },
   "votes": {
-    "fujimori": 2639255,
-    "rla": 1834811,
-    "sanchez": 1869768,
-    "nieto": 1712412,
-    "belmont": 1572361
+    "fujimori": 2639602,
+    "rla": 1835370,
+    "sanchez": 1869827,
+    "nieto": 1712718,
+    "belmont": 1572547
   },
   "probabilities": {
     "fujimori": 99,
@@ -449,6 +449,6 @@
     "nieto": 0,
     "belmont": 0
   },
-  "_scrapedAt": "2026-04-15T22:31:30.630Z",
+  "_scrapedAt": "2026-04-15T22:37:50.898Z",
   "_source": "resultadoelectoral.onpe.gob.pe"
 }
