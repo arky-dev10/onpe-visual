@@ -12,6 +12,7 @@ import { SecondRoundBanner } from './components/SecondRoundBanner';
 import { CriticalGap } from './components/CriticalGap';
 import { HeaderGoberna } from './components/HeaderGoberna';
 import { SenadoPage } from './components/SenadoPage';
+import { DiputadosPage } from './components/DiputadosPage';
 import { MOCK_ONPE, MOCK_DATUM } from './data/mock';
 import { loadData } from './data/source';
 import { useTheme } from './components/ThemeToggle';
@@ -27,15 +28,22 @@ const PARTY_MAP: Record<CandKey, { party: string; initials: string }> = {
   belmont:  { party: 'País para Todos',     initials: 'RB'  },
 };
 
-type View = 'presidencial' | 'senado';
+type View = 'presidencial' | 'senado' | 'diputados';
+
+function getViewFromHash(): View {
+  const h = window.location.hash;
+  if (h === '#senado') return 'senado';
+  if (h === '#diputados') return 'diputados';
+  return 'presidencial';
+}
 
 function App() {
   const [theme, setTheme] = useTheme();
   const [tab, setTab] = useState<TabId>('onpe');
-  const [view, setView] = useState<View>(() => (window.location.hash === '#senado' ? 'senado' : 'presidencial'));
+  const [view, setView] = useState<View>(getViewFromHash);
 
   useEffect(() => {
-    const onHash = () => setView(window.location.hash === '#senado' ? 'senado' : 'presidencial');
+    const onHash = () => setView(getViewFromHash());
     window.addEventListener('hashchange', onHash);
     return () => window.removeEventListener('hashchange', onHash);
   }, []);
@@ -88,6 +96,14 @@ function App() {
       <>
         <HeaderGoberna />
         <SenadoPage />
+      </>
+    );
+  }
+  if (view === 'diputados') {
+    return (
+      <>
+        <HeaderGoberna />
+        <DiputadosPage />
       </>
     );
   }

@@ -1,6 +1,7 @@
 const NAV: { label: string; href: string }[] = [
   { label: 'PRESIDENCIAL', href: '#' },
   { label: 'SENADO',       href: '#senado' },
+  { label: 'DIPUTADOS',    href: '#diputados' },
 ];
 
 export function HeaderGoberna() {
