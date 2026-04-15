@@ -20,8 +20,9 @@ export function Hero({ pctActas, onRefresh, loading, theme, onThemeChange }: Pro
 
       <div className="hero-center">
         <div className="hero-label">ONPE · Actas contabilizadas</div>
-        <div className="hero-pct">
-          {intPart}<span className="hero-pct-sign">.{decPart}%</span>
+        <div className="hero-pct" key={pctActas}>
+          <span className="num-flash">{intPart}</span>
+          <span className="hero-pct-sign">.{decPart}%</span>
         </div>
         <div style={{ fontSize: 11, color: 'var(--tx3)', marginTop: 4 }}>
           <span className="live-dot" /> &nbsp; 15 Abr 02:24 a. m. · 25 regiones · En vivo

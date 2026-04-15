@@ -29,7 +29,7 @@ export function CandidateStrip({ values, deltas = {}, small = {} }: Props) {
               <div className="cand-name">{c.short}</div>
             </div>
             <div className="cand-pct">
-              {v.toFixed(3)}%
+              <span key={v.toFixed(3)} className="num-flash">{v.toFixed(3)}</span>%
               <span className={`cand-trend ${down ? 'down' : ''}`}>
                 {down ? <IconArrowDown /> : <IconArrowUp />}
                 {Math.abs(d).toFixed(3)}

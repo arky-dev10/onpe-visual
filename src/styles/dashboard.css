@@ -309,6 +309,84 @@ button { font: inherit; cursor: pointer; }
   to   { opacity: 1; transform: translateY(0);   filter: blur(0); }
 }
 
+/* Flash suave al cambiar un número */
+@keyframes numberFlash {
+  0%   { filter: brightness(1); transform: scale(1); }
+  20%  { filter: brightness(1.6); transform: scale(1.04); }
+  100% { filter: brightness(1); transform: scale(1); }
+}
+.num-flash { animation: numberFlash .6s ease; }
+
+/* Pop de entrada para avatares */
+@keyframes avatarPop {
+  0%   { opacity: 0; transform: scale(.4) rotate(-12deg); }
+  70%  { opacity: 1; transform: scale(1.08) rotate(4deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+.cand-card .cand-head > :first-child {
+  animation: avatarPop .6s var(--back-curve) both;
+}
+.cand-card:nth-child(1) .cand-head > :first-child { animation-delay: .1s; }
+.cand-card:nth-child(2) .cand-head > :first-child { animation-delay: .18s; }
+.cand-card:nth-child(3) .cand-head > :first-child { animation-delay: .26s; }
+.cand-card:nth-child(4) .cand-head > :first-child { animation-delay: .34s; }
+.cand-card:nth-child(5) .cand-head > :first-child { animation-delay: .42s; }
+
+/* Shine recorriendo el hero-pct cada tanto */
+.hero-pct {
+  position: relative;
+  background-size: 200% 100%;
+  animation: countFadeIn 1s ease forwards, heroShine 8s ease-in-out infinite 2s;
+}
+@keyframes heroShine {
+  0%, 85% { background-position: 0% 50%; }
+  95%     { background-position: 100% 50%; }
+  100%    { background-position: 0% 50%; }
+}
+
+/* Card lift sutil al hover */
+.card, .prob-card, .cand-card, .gap-card, .sv-banner {
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.card:hover, .cand-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+}
+
+/* Shine periódico en la alerta de brecha */
+.gap-card::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(224,72,72,0.08) 50%, transparent 100%);
+  transform: translateX(-100%);
+  animation: gapShine 4s ease-in-out infinite 1.5s;
+  pointer-events: none;
+}
+@keyframes gapShine {
+  0%   { transform: translateX(-100%); }
+  60%  { transform: translateX(100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Live-dot más enfático */
+.live-dot {
+  position: relative;
+}
+.live-dot::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1.5px solid var(--c-nieto);
+  animation: livePulse 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Números monoespaciados rotando suave */
+.cand-pct, .hero-pct, .sv-pct, .gap-big {
+  transition: color .3s;
+}
+
 /* ───────────── 5. Buttons / chips ───────────── */
 .refresh-btn {
   background: var(--bg-card);

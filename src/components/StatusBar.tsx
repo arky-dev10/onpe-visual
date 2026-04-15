@@ -1,4 +1,4 @@
-import { IconDoc, IconClock } from './Icons';
+import { IconDoc } from './Icons';
 import type { DashboardData } from '../types';
 
 export function StatusBar({ d }: { d: DashboardData }) {
@@ -12,7 +12,6 @@ export function StatusBar({ d }: { d: DashboardData }) {
       <span>Proyección recalculada</span>
       <span className="jee-badge"><IconDoc /> JEE · {fmt(d.actasRevisadas)} actas en revisión</span>
       <span className="sep">· −{fmt(d.votosFaltantes)} votos</span>
-      <span className="muted"><IconClock /> &nbsp;Próximo refresh: {d.proximoRefresh}</span>
     </div>
   );
 }

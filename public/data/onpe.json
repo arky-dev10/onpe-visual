@@ -1,12 +1,12 @@
 {
-  "pctActas": 91.546,
-  "actasRevisadas": 84924,
+  "pctActas": 91.549,
+  "actasRevisadas": 84926,
   "actasTotal": 92766,
-  "votosEmitidos": 18551670,
-  "votosFaltantes": 1568358,
+  "votosEmitidos": 18551953,
+  "votosFaltantes": 1567826,
   "proximoRefresh": "4:00",
-  "fechaActualizacion": "15-abr., 03:37 p. m.",
-  "jeeStatus": "4,646 actas en JEE",
+  "fechaActualizacion": "15-abr., 03:47 p. m.",
+  "jeeStatus": "4,650 actas en JEE",
   "regions": [
     {
       "name": "Amazonas",
@@ -436,11 +436,11 @@
     "belmont": 10.155
   },
   "votes": {
-    "fujimori": 2636458,
-    "rla": 1832990,
-    "sanchez": 1869021,
-    "nieto": 1710615,
-    "belmont": 1571248
+    "fujimori": 2636505,
+    "rla": 1833005,
+    "sanchez": 1869040,
+    "nieto": 1710645,
+    "belmont": 1571267
   },
   "probabilities": {
     "fujimori": 99,
@@ -449,6 +449,6 @@
     "nieto": 0,
     "belmont": 0
   },
-  "_scrapedAt": "2026-04-15T20:51:31.777Z",
+  "_scrapedAt": "2026-04-15T20:57:47.921Z",
   "_source": "resultadoelectoral.onpe.gob.pe"
 }
