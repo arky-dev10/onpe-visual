@@ -14,9 +14,11 @@ const DATUM_URL = '/data/datum.json';
 
 export async function loadData(source: 'onpe' | 'datum'): Promise<DashboardData> {
   if (!USE_FETCH) return source === 'onpe' ? MOCK_ONPE : MOCK_DATUM;
-  const url = source === 'onpe' ? ONPE_URL : DATUM_URL;
+  const base = source === 'onpe' ? ONPE_URL : DATUM_URL;
+  // cache-buster para esquivar CDN + browser cache
+  const url = `${base}${base.includes('?') ? '&' : '?'}t=${Date.now()}`;
   try {
-    const r = await fetch(url, { cache: 'no-store' });
+    const r = await fetch(url, { cache: 'no-store', headers: { 'cache-control': 'no-cache' } });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const json = await r.json();
     return json as DashboardData;

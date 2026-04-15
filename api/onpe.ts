@@ -12,7 +12,8 @@ export default async function handler(_req: VercelRequest, res: VercelResponse) 
     const r = await fetch(VPS, { cache: 'no-store' });
     const body = await r.text();
     res.setHeader('content-type', 'application/json; charset=utf-8');
-    res.setHeader('cache-control', 'public, s-maxage=30, stale-while-revalidate=120');
+    // caché corto (5s CDN, 15s SWR) para tener data casi viva
+    res.setHeader('cache-control', 'public, s-maxage=5, stale-while-revalidate=15');
     res.status(r.status).send(body);
   } catch (e: any) {
     res.status(502).json({ error: 'upstream', message: String(e?.message || e) });
