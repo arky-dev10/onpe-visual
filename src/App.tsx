@@ -48,16 +48,9 @@ function App() {
 
   const data = tab === 'onpe' ? onpeData : datumData;
 
-  // Current aggregate values for strip from last series point
+  // Valores nacionales reales del ONPE (vienen en data.projection desde el scraper)
   const current = useMemo(() => {
-    const last = data.series[data.series.length - 1];
-    return {
-      fujimori: last.fujimori,
-      rla: last.rla,
-      nieto: last.nieto,
-      belmont: last.belmont,
-      sanchez: last.sanchez,
-    } as Record<CandKey, number>;
+    return { ...data.projection } as Record<CandKey, number>;
   }, [data]);
 
   const deltas: Partial<Record<CandKey, number>> = { fujimori: 0.048, sanchez: 0.185, rla: -0.021, nieto: -0.012, belmont: -0.015 };
