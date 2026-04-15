@@ -1,6 +1,19 @@
 import { useEffect, useState } from 'react';
 import { loadSenado, colorOfPartido, nombreCorto, type SenadoData, type DistritoRegional } from '../data/senadoSource';
 import { Hemicycle, HemicycleLegend } from './Hemicycle';
+import { MapPartidos } from './MapPartidos';
+import { ProvinciasView } from './ProvinciasView';
+
+// Ubigeo aproximado por nombre de distrito/departamento para el drill-down de provincias
+const DEPT_UBIGEO: Record<string, string> = {
+  'AMAZONAS': '010000', 'ÁNCASH': '020000', 'APURÍMAC': '030000', 'AREQUIPA': '040000',
+  'AYACUCHO': '050000', 'CAJAMARCA': '060000', 'CALLAO': '240000', 'CUSCO': '070000',
+  'HUANCAVELICA': '080000', 'HUÁNUCO': '090000', 'ICA': '100000', 'JUNÍN': '110000',
+  'LA LIBERTAD': '120000', 'LAMBAYEQUE': '130000', 'LIMA': '140000', 'LORETO': '150000',
+  'MADRE DE DIOS': '160000', 'MOQUEGUA': '170000', 'PASCO': '180000', 'PIURA': '190000',
+  'PUNO': '200000', 'SAN MARTÍN': '210000', 'TACNA': '220000', 'TUMBES': '230000',
+  'UCAYALI': '250000', 'LIMA PROVINCIAS': '140000',
+};
 
 type SubTab = 'nacional' | 'regional';
 
@@ -8,6 +21,7 @@ export function SenadoPage() {
   const [data, setData] = useState<SenadoData | null>(null);
   const [sub, setSub] = useState<SubTab>('nacional');
   const [selected, setSelected] = useState<DistritoRegional | null>(null);
+  const [provDept, setProvDept] = useState<{ ubigeo: string; nombre: string } | null>(null);
 
   useEffect(() => {
     let alive = true;
@@ -62,7 +76,26 @@ export function SenadoPage() {
       {sub === 'nacional' && <NacionalTab data={data} />}
       {sub === 'regional' && <RegionalTab data={data} onSelect={setSelected} />}
 
-      {selected && <DistritoModal distrito={selected} onClose={() => setSelected(null)} />}
+      {selected && (
+        <DistritoModal
+          distrito={selected}
+          onClose={() => setSelected(null)}
+          onDrillProvincias={() => {
+            const ubigeo = DEPT_UBIGEO[selected.nombre.toUpperCase()];
+            if (ubigeo) {
+              setProvDept({ ubigeo, nombre: selected.nombre });
+              setSelected(null);
+            }
+          }}
+        />
+      )}
+      {provDept && (
+        <ProvinciasView
+          deptUbigeo={provDept.ubigeo}
+          deptNombre={provDept.nombre}
+          onClose={() => setProvDept(null)}
+        />
+      )}
     </div>
   );
 }
@@ -133,13 +166,20 @@ function RegionalTab({ data, onSelect }: { data: SenadoData; onSelect: (d: Distr
 
   return (
     <>
-      <div className="card" style={{ marginBottom: 16, padding: '20px' }}>
-        <div className="card-title" style={{ fontSize: 14 }}>Escaños regionales consolidados</div>
-        <div className="card-sub">
-          {data.regional.escanosTotales} escaños · 27 distritos electorales · D'Hondt por distrito
+      <div className="grid-2" style={{ marginBottom: 16 }}>
+        <div className="card" style={{ padding: '16px 20px' }}>
+          <div className="card-title" style={{ fontSize: 14 }}>Escaños regionales consolidados</div>
+          <div className="card-sub">
+            {data.regional.escanosTotales} escaños · 27 distritos · D'Hondt por distrito
+          </div>
+          <Hemicycle escanos={resumenEscanos} partidos={data.regional.resumenPartidos} total={data.regional.escanosTotales} size="md" />
+          <HemicycleLegend escanos={resumenEscanos} partidos={resumen} />
         </div>
-        <Hemicycle escanos={resumenEscanos} partidos={data.regional.resumenPartidos} total={data.regional.escanosTotales} size="lg" />
-        <HemicycleLegend escanos={resumenEscanos} partidos={resumen} />
+        <div className="card" style={{ padding: '16px 20px' }}>
+          <div className="card-title" style={{ fontSize: 14 }}>Mapa del Perú — partido ganador por distrito</div>
+          <div className="card-sub">Número de escaños y % del ganador</div>
+          <MapPartidos distritos={data.regional.distritos} onSelect={onSelect} />
+        </div>
       </div>
 
       <div className="card">
@@ -192,8 +232,9 @@ function RegionalTab({ data, onSelect }: { data: SenadoData; onSelect: (d: Distr
   );
 }
 
-function DistritoModal({ distrito: d, onClose }: { distrito: DistritoRegional; onClose: () => void }) {
+function DistritoModal({ distrito: d, onClose, onDrillProvincias }: { distrito: DistritoRegional; onClose: () => void; onDrillProvincias?: () => void }) {
   const topPartidos = d.partidos.slice(0, 8);
+  const hasDrill = !!(DEPT_UBIGEO[d.nombre.toUpperCase()] && onDrillProvincias);
   return (
     <div className="modal-overlay open" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()} style={{ maxWidth: 520 }}>
@@ -207,9 +248,41 @@ function DistritoModal({ distrito: d, onClose }: { distrito: DistritoRegional; o
           {d.escanos} escaños · actas {d.pctActas.toFixed(2)}% · {d.totalVotosValidos.toLocaleString('es-PE')} votos válidos
         </div>
 
-        <div style={{ margin: '10px 0 18px' }}>
+        <div style={{ margin: '10px 0 14px' }}>
           <Hemicycle escanos={d.asignacion} partidos={d.partidos} total={d.escanos} size="sm" />
         </div>
+
+        {hasDrill && (
+          <button
+            onClick={onDrillProvincias}
+            style={{
+              width: '100%',
+              marginBottom: 14,
+              padding: '10px 14px',
+              background: 'linear-gradient(90deg, #d4a017, #c9a44a)',
+              color: '#1a1a1a',
+              border: 'none',
+              borderRadius: 8,
+              fontFamily: 'Montserrat, sans-serif',
+              fontWeight: 700,
+              fontSize: 12,
+              letterSpacing: 1.5,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              transition: 'transform .15s',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.02)')}
+            onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
+          >
+            VER PROVINCIAS DE {d.nombre.toUpperCase()}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </button>
+        )}
 
         {topPartidos.map(p => {
           const asignados = d.asignacion[p.codigo] || 0;
