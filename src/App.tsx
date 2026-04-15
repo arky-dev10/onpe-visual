@@ -10,6 +10,7 @@ import { ProjectionChart } from './components/ProjectionChart';
 import { RegionModal } from './components/RegionModal';
 import { SecondRoundBanner } from './components/SecondRoundBanner';
 import { CriticalGap } from './components/CriticalGap';
+import { HeaderGoberna } from './components/HeaderGoberna';
 import { MOCK_ONPE, MOCK_DATUM } from './data/mock';
 import { loadData } from './data/source';
 import { useTheme } from './components/ThemeToggle';
@@ -73,7 +74,9 @@ function App() {
   const sourceLabel = tab === 'onpe' ? 'ONPE parcial' : 'Datum CR 100%';
 
   return (
-    <div className="container">
+    <>
+      <HeaderGoberna />
+      <div className="container">
       <Hero pctActas={data.pctActas} onRefresh={refresh} loading={loading} theme={theme} onThemeChange={setTheme} />
       <StatusBar d={data} />
 
@@ -88,6 +91,8 @@ function App() {
         thirdName={third}
         secondPct={current[second]}
         thirdPct={current[third]}
+        secondVotes={data.votes?.[second]}
+        thirdVotes={data.votes?.[third]}
         votosRestantes={data.votosFaltantes}
       />
 
@@ -110,7 +115,8 @@ function App() {
       </div>
 
       <RegionModal region={selected} source={sourceLabel} onClose={() => setSelected(null)} />
-    </div>
+      </div>
+    </>
   );
 }
 

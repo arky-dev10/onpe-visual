@@ -50,5 +50,6 @@ export interface DashboardData {
   extranjero: RegionResult;
   series: SeriesPoint[];
   projection: Record<CandKey, number>;
+  votes?: Record<CandKey, number>;
   probabilities: Record<CandKey, number>;
 }

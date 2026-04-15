@@ -199,6 +199,7 @@ async function scrape() {
     extranjero: extranjero || regions[0],
     series,
     projection: { ...byKey },
+    votes: { ...votesByKey },
     probabilities: probs,
     _scrapedAt: new Date().toISOString(),
     _source: 'resultadoelectoral.onpe.gob.pe',

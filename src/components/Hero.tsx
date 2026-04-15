@@ -14,7 +14,6 @@ export function Hero({ pctActas, onRefresh, loading, theme, onThemeChange }: Pro
   return (
     <header className="hero">
       <div className="hero-left">
-        <div className="brand-goberna">GOBERNA</div>
         <div className="hero-title">Perú Elige 2026</div>
         <div className="hero-sub">Elecciones Generales · Primera Vuelta</div>
       </div>

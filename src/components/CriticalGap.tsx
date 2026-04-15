@@ -5,12 +5,17 @@ interface Props {
   thirdPct: number;
   secondName: 'rla' | 'sanchez' | 'nieto' | 'belmont' | 'fujimori';
   thirdName:  'rla' | 'sanchez' | 'nieto' | 'belmont' | 'fujimori';
+  secondVotes?: number;
+  thirdVotes?: number;
   votosRestantes: number;
 }
 
-export function CriticalGap({ secondPct, thirdPct, secondName, thirdName, votosRestantes }: Props) {
+export function CriticalGap({ secondPct, thirdPct, secondName, thirdName, secondVotes, thirdVotes, votosRestantes }: Props) {
   const gap = Math.abs(secondPct - thirdPct);
-  const gapVotos = Math.round(votosRestantes * gap / 100);
+  // brecha real en votos = diferencia de totales, no una estimación sobre el resto
+  const gapVotos = (secondVotes != null && thirdVotes != null)
+    ? Math.abs(secondVotes - thirdVotes)
+    : Math.round(votosRestantes * gap / 100);
   const pctStr = gap.toFixed(3);
   const a = CANDIDATES[secondName];
   const b = CANDIDATES[thirdName];
