@@ -72,19 +72,39 @@ async function scrape() {
   await page.waitForTimeout(2500);
 
   // ─────────── NACIONAL (único) ───────────
-  const [totNac, partNac] = await Promise.all([
+  const [totNac, partNac, candNac] = await Promise.all([
     getJson(page, `${BASE}/resumen-general/totales?idEleccion=15&tipoFiltro=eleccion`, HEADERS_UNICO),
     getJson(page, `${BASE}/senadores-distrito-unico/participantes-ubicacion-geografica-nombre?idEleccion=15&tipoFiltro=eleccion`, HEADERS_UNICO),
+    getJson(page, `${BASE}/senadores-distrito-unico/participantes-por-candidato?pagina=0&tamanio=3000&idEleccion=15&tipoFiltro=eleccion`, HEADERS_UNICO),
   ]);
 
   const partidosNac = (partNac?.data || []).filter(esPartidoReal).sort((a, b) => b.totalVotosValidos - a.totalVotosValidos);
   const totalValidosNac = partidosNac.reduce((s, p) => s + p.totalVotosValidos, 0);
-  const partidosNacOut = partidosNac.map(p => ({
-    codigo: String(p.codigoAgrupacionPolitica),
-    nombre: p.nombreAgrupacionPolitica,
-    votos: p.totalVotosValidos,
-    pct: p.porcentajeVotosValidos ?? 0,
-  }));
+
+  // Agrupar candidatos nacional por partido (sorted por preferencial)
+  const candidatosByParty = {};
+  for (const c of (candNac?.data || [])) {
+    const cod = String(Number(c.codigoAgrupacionPolitica));
+    if (!candidatosByParty[cod]) candidatosByParty[cod] = [];
+    candidatosByParty[cod].push({
+      nombre: c.nombreCandidato || '',
+      dni: c.dniCandidato || '',
+      lista: c.lista ?? 0,
+      votosPreferenciales: c.totalVotosValidos || 0,
+    });
+  }
+  Object.values(candidatosByParty).forEach(arr => arr.sort((a, b) => b.votosPreferenciales - a.votosPreferenciales));
+
+  const partidosNacOut = partidosNac.map(p => {
+    const cod = String(p.codigoAgrupacionPolitica);
+    return {
+      codigo: cod,
+      nombre: p.nombreAgrupacionPolitica,
+      votos: p.totalVotosValidos,
+      pct: p.porcentajeVotosValidos ?? 0,
+      candidatos: candidatosByParty[cod] || [],
+    };
+  });
 
   // D'Hondt solo sobre los que pasan la valla
   const passVallaIdx = partidosNacOut
@@ -96,6 +116,12 @@ async function scrape() {
   const escanosNac = {};
   for (const p of partidosNacOut) escanosNac[p.codigo] = 0;
   passVallaIdx.forEach((idx, k) => { escanosNac[partidosNacOut[idx].codigo] = seatsPass[k]; });
+
+  // Marcar candidatos electos (top N por partido según escaños)
+  for (const p of partidosNacOut) {
+    const n = escanosNac[p.codigo] || 0;
+    p.candidatos = p.candidatos.map((c, i) => ({ ...c, electo: i < n }));
+  }
 
   const nacional = {
     pctActas: totNac.data.actasContabilizadas,
@@ -127,23 +153,47 @@ async function scrape() {
     const chunk = dArr.slice(i, i + 5);
     const results = await Promise.all(chunk.map(async d => {
       const id = d.codigo;
-      const [tot, part] = await Promise.all([
+      const [tot, part, cand] = await Promise.all([
         getJson(page, `${BASE}/resumen-general/totales?idEleccion=14&tipoFiltro=distrito_electoral&idDistritoElectoral=${id}`, HEADERS_MULT).catch(() => null),
         getJson(page, `${BASE}/senadores-distrital-multiple/participantes-ubicacion-geografica?idDistritoElectoral=${id}&idEleccion=14&tipoFiltro=distrito_electoral`, HEADERS_MULT).catch(() => null),
+        getJson(page, `${BASE}/senadores-distrital-multiple/participantes-por-candidato?pagina=0&tamanio=2000&idDistritoElectoral=${id}&idEleccion=14&tipoFiltro=distrito_electoral`, HEADERS_MULT).catch(() => null),
       ]);
       if (!tot?.data || !part?.data) return null;
       const pts = part.data.filter(esPartidoReal).sort((a, b) => b.totalVotosValidos - a.totalVotosValidos);
       const escanosDist = Math.max(0, ...pts.map(p => p.totalCandidatos || 0));
-      const partidosOut = pts.map(p => ({
-        codigo: String(p.codigoAgrupacionPolitica ?? p.idAgrupacionPolitica ?? ''),
-        nombre: p.nombreAgrupacionPolitica,
-        votos: p.totalVotosValidos,
-        pct: p.porcentajeVotosValidos ?? 0,
-        candidatos: p.totalCandidatos || 0,
-      }));
+
+      // Candidatos por partido (si hay)
+      const candByParty = {};
+      for (const c of (cand?.data || [])) {
+        const cod = String(Number(c.codigoAgrupacionPolitica));
+        if (!candByParty[cod]) candByParty[cod] = [];
+        candByParty[cod].push({
+          nombre: c.nombreCandidato || '',
+          dni: c.dniCandidato || '',
+          lista: c.lista ?? 0,
+          votosPreferenciales: c.totalVotosValidos || 0,
+        });
+      }
+      Object.values(candByParty).forEach(arr => arr.sort((a, b) => b.votosPreferenciales - a.votosPreferenciales));
+
+      const partidosOut = pts.map(p => {
+        const cod = String(p.codigoAgrupacionPolitica ?? p.idAgrupacionPolitica ?? '');
+        return {
+          codigo: cod,
+          nombre: p.nombreAgrupacionPolitica,
+          votos: p.totalVotosValidos,
+          pct: p.porcentajeVotosValidos ?? 0,
+          candidatos: p.totalCandidatos || 0,
+          candidatosList: candByParty[cod] || [],
+        };
+      });
       const seats = dhondt(partidosOut.map(p => p.votos), escanosDist);
       const asignacion = {};
-      partidosOut.forEach((p, idx) => { asignacion[p.codigo] = seats[idx]; });
+      partidosOut.forEach((p, idx) => {
+        asignacion[p.codigo] = seats[idx];
+        // marcar electos
+        p.candidatosList = p.candidatosList.map((c, i) => ({ ...c, electo: i < seats[idx] }));
+      });
 
       return {
         codigo: id,

@@ -1,9 +1,18 @@
+export interface CandidatoSenado {
+  nombre: string;
+  dni: string;
+  lista: number;
+  votosPreferenciales: number;
+  electo?: boolean;
+}
+
 export interface PartidoVotos {
   codigo: string;
   nombre: string;
   votos: number;
   pct: number;
-  candidatos?: number;
+  candidatos?: number | CandidatoSenado[]; // nacional: array; regional: number
+  candidatosList?: CandidatoSenado[];      // regional detallado (si existe)
 }
 
 export interface SenadoNacional {

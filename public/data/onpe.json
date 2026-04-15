@@ -45,10 +45,10 @@
       "name": "Arequipa",
       "pct": 97.841,
       "fujimori": 7.32,
-      "rla": 10.637,
-      "sanchez": 10.051,
-      "nieto": 18.663,
-      "belmont": 10.887,
+      "rla": 10.634,
+      "sanchez": 10.05,
+      "nieto": 18.665,
+      "belmont": 10.886,
       "actasRevisadas": 4124,
       "actasTotal": 4215
     },
@@ -143,10 +143,10 @@
     {
       "name": "La Libertad",
       "pct": 92.116,
-      "fujimori": 20.24,
-      "rla": 8.247,
-      "sanchez": 9.445,
-      "nieto": 9.861,
+      "fujimori": 20.243,
+      "rla": 8.243,
+      "sanchez": 9.44,
+      "nieto": 9.86,
       "belmont": 7.092,
       "actasRevisadas": 4884,
       "actasTotal": 5302
@@ -176,10 +176,10 @@
     {
       "name": "Loreto",
       "pct": 81.201,
-      "fujimori": 28.326,
-      "rla": 6.832,
-      "sanchez": 9.304,
-      "nieto": 3.705,
+      "fujimori": 28.323,
+      "rla": 6.831,
+      "sanchez": 9.316,
+      "nieto": 3.704,
       "belmont": 4.242,
       "actasRevisadas": 2190,
       "actasTotal": 2697
@@ -285,25 +285,25 @@
     },
     {
       "name": "Extranjero",
-      "pct": 44.986,
+      "pct": 45.026,
       "fujimori": 15.786,
       "rla": 29.306,
       "sanchez": 2.339,
       "nieto": 10.919,
       "belmont": 8.88,
-      "actasRevisadas": 1144,
+      "actasRevisadas": 1145,
       "actasTotal": 2543
     }
   ],
   "extranjero": {
     "name": "Extranjero",
-    "pct": 44.986,
+    "pct": 45.026,
     "fujimori": 15.786,
     "rla": 29.306,
     "sanchez": 2.339,
     "nieto": 10.919,
     "belmont": 8.88,
-    "actasRevisadas": 1144,
+    "actasRevisadas": 1145,
     "actasTotal": 2543
   },
   "series": [
@@ -353,6 +353,6 @@
     "nieto": 0,
     "belmont": 0
   },
-  "_scrapedAt": "2026-04-15T22:48:31.818Z",
+  "_scrapedAt": "2026-04-15T22:54:28.202Z",
   "_source": "resultadoelectoral.onpe.gob.pe"
 }
