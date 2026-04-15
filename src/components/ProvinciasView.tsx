@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { MapProvincias } from './MapProvincias';
 
 interface PartidoProv {
   partido: string;
@@ -42,6 +43,7 @@ const nombreCorto = (s: string) => {
 export function ProvinciasView({ deptUbigeo, deptNombre, onClose }: { deptUbigeo: string; deptNombre: string; onClose: () => void }) {
   const [provincias, setProvincias] = useState<Provincia[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [hovered, setHovered] = useState<Provincia | null>(null);
 
   useEffect(() => {
     let alive = true;
@@ -98,6 +100,35 @@ export function ProvinciasView({ deptUbigeo, deptNombre, onClose }: { deptUbigeo
 
         {provincias && (
           <>
+            {/* Mapa de provincias */}
+            <div style={{ marginBottom: 14, background: 'var(--bg-alt)', borderRadius: 10, padding: 10 }}>
+              <MapProvincias
+                deptNombre={deptNombre}
+                provincias={provincias}
+                colorOf={colorOf}
+                onHover={setHovered}
+              />
+              <div style={{ textAlign: 'center', marginTop: 8, fontSize: 11, color: 'var(--tx3)', minHeight: 20 }}>
+                {hovered ? (
+                  <span>
+                    <strong style={{ color: 'var(--tx1)' }}>{hovered.nombre}</strong>
+                    {hovered.ganador && (
+                      <>
+                        {' · '}
+                        <span style={{ color: colorOf(hovered.ganador.codigo), fontWeight: 600 }}>
+                          {nombreCorto(hovered.ganador.partido)}
+                        </span>
+                        {' '}{hovered.ganador.pct.toFixed(2)}%
+                      </>
+                    )}
+                    {' · '}{hovered.pctActas.toFixed(1)}% actas
+                  </span>
+                ) : (
+                  'Pasa el cursor sobre una provincia para ver detalles'
+                )}
+              </div>
+            </div>
+
             {/* Resumen agregado */}
             {topAggr.length > 0 && (
               <div style={{ padding: '10px 12px', background: 'var(--bg-alt)', borderRadius: 8, marginBottom: 16 }}>
