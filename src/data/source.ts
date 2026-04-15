@@ -7,9 +7,9 @@ import { MOCK_ONPE, MOCK_DATUM } from './mock';
 // El cron/script externo debe producir un JSON con el mismo shape de DashboardData.
 
 const USE_FETCH = true;
-// Backend propio: scraper ONPE corriendo 24/7 en VPS vía pm2, nginx sirve con CORS abierto.
-const VPS = 'http://161.132.39.165:8088';
-const ONPE_URL  = `${VPS}/onpe.json`;
+// /api/onpe es una Vercel edge function que proxea al VPS (evita mixed-content HTTPS→HTTP).
+// En dev (vite) este endpoint no existe → el fetch cae a MOCK_ONPE.
+const ONPE_URL  = '/api/onpe';
 const DATUM_URL = '/data/datum.json';
 
 export async function loadData(source: 'onpe' | 'datum'): Promise<DashboardData> {
