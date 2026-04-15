@@ -1,8 +1,29 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { loadSenado, colorOfPartido, nombreCorto, type SenadoData, type DistritoRegional } from '../data/senadoSource';
-import { Hemicycle, HemicycleLegend } from './Hemicycle';
+import { Hemicycle, HemicycleLegend, type SeatInfo } from './Hemicycle';
+import { SeatCard } from './SeatCard';
 import { MapPartidos } from './MapPartidos';
 import { ProvinciasView } from './ProvinciasView';
+
+function seatsFromPartyMap(escanos: Record<string, number>, partidos: { codigo: string; nombre: string }[], distrito?: string): SeatInfo[] {
+  const out: SeatInfo[] = [];
+  const ordered = partidos
+    .map(p => ({ ...p, n: escanos[p.codigo] || 0 }))
+    .filter(p => p.n > 0)
+    .sort((a, b) => b.n - a.n);
+  for (const p of ordered) {
+    for (let i = 0; i < p.n; i++) {
+      out.push({
+        color: colorOfPartido(p.codigo),
+        partyCodigo: p.codigo,
+        partyName: p.nombre,
+        distrito,
+        orderInParty: i,
+      });
+    }
+  }
+  return out;
+}
 
 // Ubigeo aproximado por nombre de distrito/departamento para el drill-down de provincias
 const DEPT_UBIGEO: Record<string, string> = {
@@ -22,6 +43,7 @@ export function SenadoPage() {
   const [sub, setSub] = useState<SubTab>('nacional');
   const [selected, setSelected] = useState<DistritoRegional | null>(null);
   const [provDept, setProvDept] = useState<{ ubigeo: string; nombre: string } | null>(null);
+  const [seatSelected, setSeatSelected] = useState<SeatInfo | null>(null);
 
   useEffect(() => {
     let alive = true;
@@ -73,13 +95,16 @@ export function SenadoPage() {
         </button>
       </div>
 
-      {sub === 'nacional' && <NacionalTab data={data} />}
-      {sub === 'regional' && <RegionalTab data={data} onSelect={setSelected} />}
+      {sub === 'nacional' && <NacionalTab data={data} onSeatClick={setSeatSelected} />}
+      {sub === 'regional' && <RegionalTab data={data} onSelect={setSelected} onSeatClick={setSeatSelected} />}
+
+      {seatSelected && <SeatCard seat={seatSelected} onClose={() => setSeatSelected(null)} />}
 
       {selected && (
         <DistritoModal
           distrito={selected}
           onClose={() => setSelected(null)}
+          onSeatClick={setSeatSelected}
           onDrillProvincias={() => {
             const ubigeo = DEPT_UBIGEO[selected.nombre.toUpperCase()];
             if (ubigeo) {
@@ -100,10 +125,11 @@ export function SenadoPage() {
   );
 }
 
-function NacionalTab({ data }: { data: SenadoData }) {
+function NacionalTab({ data, onSeatClick }: { data: SenadoData; onSeatClick: (s: SeatInfo) => void }) {
   const n = data.nacional;
   const pasaValla = n.partidos.filter(p => p.pct >= n.valla);
   const maxPct = Math.max(...n.partidos.slice(0, 12).map(p => p.pct), 1);
+  const nacSeats = useMemo(() => seatsFromPartyMap(n.escanos, n.partidos), [n]);
 
   return (
     <>
@@ -113,7 +139,7 @@ function NacionalTab({ data }: { data: SenadoData }) {
           Asignación por D'Hondt · valla {n.valla}% · {pasaValla.length} partido{pasaValla.length !== 1 ? 's' : ''} pasa{pasaValla.length === 1 ? '' : 'n'}
         </div>
 
-        <Hemicycle escanos={n.escanos} partidos={n.partidos} total={n.escanosTotales} size="lg" />
+        <Hemicycle seats={nacSeats} total={n.escanosTotales} size="lg" onSeatClick={onSeatClick} />
 
         <HemicycleLegend escanos={n.escanos} partidos={n.partidos} />
       </div>
@@ -158,11 +184,12 @@ function NacionalTab({ data }: { data: SenadoData }) {
   );
 }
 
-function RegionalTab({ data, onSelect }: { data: SenadoData; onSelect: (d: DistritoRegional) => void }) {
+function RegionalTab({ data, onSelect, onSeatClick }: { data: SenadoData; onSelect: (d: DistritoRegional) => void; onSeatClick: (s: SeatInfo) => void }) {
   const sorted = [...data.regional.distritos].sort((a, b) => a.nombre.localeCompare(b.nombre));
   const resumen = data.regional.resumenPartidos.slice(0, 10);
   const resumenEscanos: Record<string, number> = {};
   data.regional.resumenPartidos.forEach(p => { resumenEscanos[p.codigo] = p.escanos; });
+  const regSeats = useMemo(() => seatsFromPartyMap(resumenEscanos, data.regional.resumenPartidos), [data]);
 
   return (
     <>
@@ -172,7 +199,7 @@ function RegionalTab({ data, onSelect }: { data: SenadoData; onSelect: (d: Distr
           <div className="card-sub">
             {data.regional.escanosTotales} escaños · 27 distritos · D'Hondt por distrito
           </div>
-          <Hemicycle escanos={resumenEscanos} partidos={data.regional.resumenPartidos} total={data.regional.escanosTotales} size="md" />
+          <Hemicycle seats={regSeats} total={data.regional.escanosTotales} size="md" onSeatClick={onSeatClick} />
           <HemicycleLegend escanos={resumenEscanos} partidos={resumen} />
         </div>
         <div className="card" style={{ padding: '16px 20px' }}>
@@ -232,9 +259,10 @@ function RegionalTab({ data, onSelect }: { data: SenadoData; onSelect: (d: Distr
   );
 }
 
-function DistritoModal({ distrito: d, onClose, onDrillProvincias }: { distrito: DistritoRegional; onClose: () => void; onDrillProvincias?: () => void }) {
+function DistritoModal({ distrito: d, onClose, onDrillProvincias, onSeatClick }: { distrito: DistritoRegional; onClose: () => void; onDrillProvincias?: () => void; onSeatClick: (s: SeatInfo) => void }) {
   const topPartidos = d.partidos.slice(0, 8);
   const hasDrill = !!(DEPT_UBIGEO[d.nombre.toUpperCase()] && onDrillProvincias);
+  const seats = useMemo(() => seatsFromPartyMap(d.asignacion, d.partidos, d.nombre), [d]);
   return (
     <div className="modal-overlay open" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()} style={{ maxWidth: 520 }}>
@@ -249,7 +277,7 @@ function DistritoModal({ distrito: d, onClose, onDrillProvincias }: { distrito: 
         </div>
 
         <div style={{ margin: '10px 0 14px' }}>
-          <Hemicycle escanos={d.asignacion} partidos={d.partidos} total={d.escanos} size="sm" />
+          <Hemicycle seats={seats} total={d.escanos} size="sm" onSeatClick={onSeatClick} />
         </div>
 
         {hasDrill && (

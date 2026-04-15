@@ -1,18 +1,35 @@
 import type { ReactElement } from 'react';
 import { colorOfPartido, nombreCorto } from '../data/senadoSource';
 
+export interface SeatInfo {
+  color: string;
+  partyCodigo: string;
+  partyName: string;
+  // opcionales (si el caller los tiene)
+  candidatoNombre?: string;
+  candidatoDni?: string;
+  votosPreferenciales?: number;
+  distrito?: string;
+  orderInParty?: number;
+}
+
 interface Props {
-  escanos: Record<string, number>;
-  partidos: { codigo: string; nombre: string }[];
+  // modo partidos (compat): para casos sin candidato individual
+  escanos?: Record<string, number>;
+  partidos?: { codigo: string; nombre: string }[];
+  // modo seats: lista explícita de escaños con candidato
+  seats?: SeatInfo[];
   total: number;
   size?: 'sm' | 'md' | 'lg';
+  onSeatClick?: (seat: SeatInfo) => void;
 }
 
 /**
- * Hemiciclo parlamentario — escaños dispuestos en arcos concéntricos.
- * Partidos ordenados "ideológicamente" (izquierda a derecha por escaños desc) como convención.
+ * Hemiciclo parlamentario con asientos clickeables.
+ * Si se pasa `seats`, cada asiento queda identificado con un candidato específico.
+ * Si no, usa `escanos`+`partidos` (solo colores por partido, sin candidato).
  */
-export function Hemicycle({ escanos, partidos, total, size = 'md' }: Props) {
+export function Hemicycle({ escanos, partidos, seats, total, size = 'md', onSeatClick }: Props) {
   const dims = size === 'sm'
     ? { w: 320, h: 140, r0: 48, dr: 20, sr: 5, centerFS: 18, centerY: -10 }
     : size === 'lg'
@@ -22,8 +39,7 @@ export function Hemicycle({ escanos, partidos, total, size = 'md' }: Props) {
   const cx = dims.w / 2;
   const cy = dims.h - dims.sr * 1.5;
 
-  // Determinar nº óptimo de filas para acomodar `total` escaños
-  // cada fila cabe ~floor(π × r / (seat * 1.3)) asientos
+  // Determinar filas óptimas
   let rows = 1;
   while (true) {
     let capacity = 0;
@@ -36,7 +52,6 @@ export function Hemicycle({ escanos, partidos, total, size = 'md' }: Props) {
     if (rows > 10) break;
   }
 
-  // Distribuir asientos por fila (proporcional al radio)
   const rowRadii: number[] = [];
   const rowCaps: number[] = [];
   let totalCap = 0;
@@ -48,7 +63,6 @@ export function Hemicycle({ escanos, partidos, total, size = 'md' }: Props) {
     totalCap += cap;
   }
   const seatsPerRow = rowCaps.map(c => Math.round((c / totalCap) * total));
-  // Ajustar para sumar exactamente total
   let diff = total - seatsPerRow.reduce((a, b) => a + b, 0);
   let idx = rows - 1;
   while (diff !== 0) {
@@ -57,31 +71,47 @@ export function Hemicycle({ escanos, partidos, total, size = 'md' }: Props) {
     idx = (idx - 1 + rows) % rows;
   }
 
-  // Lista lineal de colores de escaños (ordenados por partido desc)
-  const ordered = partidos
-    .map(p => ({ ...p, seats: escanos[p.codigo] || 0 }))
-    .filter(p => p.seats > 0)
-    .sort((a, b) => b.seats - a.seats);
-
-  const seatColors: { color: string; nombre: string; codigo: string }[] = [];
-  for (const p of ordered) {
-    for (let i = 0; i < p.seats; i++) {
-      seatColors.push({ color: colorOfPartido(p.codigo), nombre: p.nombre, codigo: p.codigo });
+  // Construir lista de seats
+  let expanded: SeatInfo[];
+  if (seats && seats.length) {
+    expanded = [...seats];
+    // Ordenar por partido (desc por número de asientos de ese partido) para agrupar visualmente
+    const countBy: Record<string, number> = {};
+    for (const s of seats) countBy[s.partyCodigo] = (countBy[s.partyCodigo] || 0) + 1;
+    expanded.sort((a, b) => (countBy[b.partyCodigo] - countBy[a.partyCodigo]) || a.partyCodigo.localeCompare(b.partyCodigo));
+  } else {
+    const ordered = (partidos || [])
+      .map(p => ({ ...p, n: (escanos || {})[p.codigo] || 0 }))
+      .filter(p => p.n > 0)
+      .sort((a, b) => b.n - a.n);
+    expanded = [];
+    for (const p of ordered) {
+      for (let i = 0; i < p.n; i++) {
+        expanded.push({
+          color: colorOfPartido(p.codigo),
+          partyCodigo: p.codigo,
+          partyName: p.nombre,
+        });
+      }
     }
   }
 
-  // Colocar seats fila por fila, de fuera hacia dentro, ángulo de izquierda a derecha
   const nodes: ReactElement[] = [];
   let placed = 0;
-  for (let row = rows - 1; row >= 0; row--) {  // fuera → dentro
+  for (let row = rows - 1; row >= 0; row--) {
     const radius = rowRadii[row];
     const count = seatsPerRow[row];
     for (let i = 0; i < count; i++) {
       const t = count === 1 ? 0.5 : i / (count - 1);
-      const angle = Math.PI - t * Math.PI; // 180° a 0°
+      const angle = Math.PI - t * Math.PI;
       const x = cx + radius * Math.cos(angle);
       const y = cy - radius * Math.sin(angle);
-      const seat = seatColors[placed + i];
+      const seat = expanded[placed + i];
+      const title = seat
+        ? (seat.candidatoNombre
+          ? `${seat.candidatoNombre} · ${nombreCorto(seat.partyName)}${seat.distrito ? ` · ${seat.distrito}` : ''}`
+          : nombreCorto(seat.partyName))
+        : '';
       nodes.push(
         <circle
           key={`r${row}-i${i}`}
@@ -92,8 +122,10 @@ export function Hemicycle({ escanos, partidos, total, size = 'md' }: Props) {
           stroke="var(--bg)"
           strokeWidth={1.5}
           className="hemi-seat"
+          style={{ cursor: seat && onSeatClick ? 'pointer' : 'default' }}
+          onClick={seat && onSeatClick ? () => onSeatClick(seat) : undefined}
         >
-          {seat && <title>{nombreCorto(seat.nombre)}</title>}
+          {title && <title>{title}</title>}
         </circle>
       );
     }
@@ -129,7 +161,6 @@ export function Hemicycle({ escanos, partidos, total, size = 'md' }: Props) {
   );
 }
 
-/** Leyenda de partidos con escaños debajo del hemiciclo */
 export function HemicycleLegend({ escanos, partidos }: { escanos: Record<string, number>; partidos: { codigo: string; nombre: string }[] }) {
   const rows = partidos
     .map(p => ({ ...p, seats: escanos[p.codigo] || 0 }))

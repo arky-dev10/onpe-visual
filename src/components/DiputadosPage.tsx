@@ -1,16 +1,64 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   loadDiputados, colorOfPartido, nombreCorto,
   type DiputadosData, type DistritoDiputados, type CandidatoElecto,
 } from '../data/diputadosSource';
-import { Hemicycle, HemicycleLegend } from './Hemicycle';
+import { Hemicycle, HemicycleLegend, type SeatInfo } from './Hemicycle';
+import { SeatCard } from './SeatCard';
+import { MapPartidos } from './MapPartidos';
+import { ProvinciasView } from './ProvinciasView';
 
 type SubTab = 'nacional' | 'distritos';
+
+// Ubigeo por nombre de distrito (para drill-down provincias)
+const DEPT_UBIGEO: Record<string, string> = {
+  'AMAZONAS': '010000', 'ÁNCASH': '020000', 'APURÍMAC': '030000', 'AREQUIPA': '040000',
+  'AYACUCHO': '050000', 'CAJAMARCA': '060000', 'CALLAO': '240000', 'CUSCO': '070000',
+  'HUANCAVELICA': '080000', 'HUÁNUCO': '090000', 'ICA': '100000', 'JUNÍN': '110000',
+  'LA LIBERTAD': '120000', 'LAMBAYEQUE': '130000', 'LORETO': '150000',
+  'LIMA METROPOLITANA': '140000', 'LIMA PROVINCIAS': '140000',
+  'MADRE DE DIOS': '160000', 'MOQUEGUA': '170000', 'PASCO': '180000', 'PIURA': '190000',
+  'PUNO': '200000', 'SAN MARTÍN': '210000', 'TACNA': '220000', 'TUMBES': '230000',
+  'UCAYALI': '250000',
+};
+
+function buildSeatsFromDistrito(d: DistritoDiputados): SeatInfo[] {
+  const seats: SeatInfo[] = [];
+  for (const p of d.partidos) {
+    if (p.escanos <= 0) continue;
+    const color = colorOfPartido(p.codigo);
+    const electos = p.candidatos.filter(c => c.electo);
+    for (let i = 0; i < electos.length; i++) {
+      const c = electos[i];
+      seats.push({
+        color,
+        partyCodigo: p.codigo,
+        partyName: p.nombre,
+        candidatoNombre: c.nombre,
+        candidatoDni: c.dni,
+        votosPreferenciales: c.votosPreferenciales,
+        distrito: d.nombre,
+        orderInParty: i,
+      });
+    }
+  }
+  return seats;
+}
+
+function buildSeatsNacional(data: DiputadosData): SeatInfo[] {
+  const all: SeatInfo[] = [];
+  for (const d of data.distritos) {
+    all.push(...buildSeatsFromDistrito(d));
+  }
+  return all;
+}
 
 export function DiputadosPage() {
   const [data, setData] = useState<DiputadosData | null>(null);
   const [sub, setSub] = useState<SubTab>('nacional');
   const [selected, setSelected] = useState<DistritoDiputados | null>(null);
+  const [seatSelected, setSeatSelected] = useState<SeatInfo | null>(null);
+  const [provDept, setProvDept] = useState<{ ubigeo: string; nombre: string } | null>(null);
 
   useEffect(() => {
     let alive = true;
@@ -33,7 +81,6 @@ export function DiputadosPage() {
     );
   }
 
-  // % actas promedio ponderado (proxy del avance nacional)
   const totActas = data.distritos.reduce((s, d) => s + d.actasTotal, 0);
   const revActas = data.distritos.reduce((s, d) => s + d.actasRevisadas, 0);
   const pctActas = totActas ? (revActas / totActas) * 100 : 0;
@@ -43,7 +90,7 @@ export function DiputadosPage() {
       <header className="hero">
         <div className="hero-left">
           <div className="hero-title">Cámara de Diputados · 2026</div>
-          <div className="hero-sub">Congreso Bicameral · Voto preferencial · D'Hondt por distrito</div>
+          <div className="hero-sub">Congreso Bicameral · voto preferencial · D'Hondt por distrito</div>
         </div>
         <div className="hero-center">
           <div className="hero-label">ACTAS CONTABILIZADAS</div>
@@ -67,21 +114,42 @@ export function DiputadosPage() {
         </button>
       </div>
 
-      {sub === 'nacional' && <NacionalTab data={data} />}
+      {sub === 'nacional' && <NacionalTab data={data} onSeatClick={setSeatSelected} />}
       {sub === 'distritos' && <DistritosTab data={data} onSelect={setSelected} />}
 
-      {selected && <DistritoModal distrito={selected} onClose={() => setSelected(null)} />}
+      {selected && (
+        <DistritoModal
+          distrito={selected}
+          onClose={() => setSelected(null)}
+          onSeatClick={setSeatSelected}
+          onDrillProvincias={() => {
+            const ubigeo = DEPT_UBIGEO[selected.nombre.toUpperCase()];
+            if (ubigeo) {
+              setProvDept({ ubigeo, nombre: selected.nombre });
+              setSelected(null);
+            }
+          }}
+        />
+      )}
+      {seatSelected && <SeatCard seat={seatSelected} onClose={() => setSeatSelected(null)} />}
+      {provDept && (
+        <ProvinciasView
+          deptUbigeo={provDept.ubigeo}
+          deptNombre={provDept.nombre}
+          onClose={() => setProvDept(null)}
+        />
+      )}
     </div>
   );
 }
 
-function NacionalTab({ data }: { data: DiputadosData }) {
+function NacionalTab({ data, onSeatClick }: { data: DiputadosData; onSeatClick: (s: SeatInfo) => void }) {
   const top = data.resumenPartidos.slice(0, 12);
   const escanos: Record<string, number> = {};
   data.resumenPartidos.forEach(p => { escanos[p.codigo] = p.escanos; });
   const partidos = data.resumenPartidos.map(p => ({ codigo: p.codigo, nombre: p.nombre }));
+  const seats = useMemo(() => buildSeatsNacional(data), [data]);
 
-  // Votos nacionales agregados por partido
   const votosNacional: Record<string, number> = {};
   data.distritos.forEach(d => {
     d.partidos.forEach(p => {
@@ -94,11 +162,11 @@ function NacionalTab({ data }: { data: DiputadosData }) {
   return (
     <>
       <div className="card" style={{ marginBottom: 16, padding: '20px' }}>
-        <div className="card-title" style={{ fontSize: 14 }}>Composición proyectada de la Cámara de Diputados</div>
+        <div className="card-title" style={{ fontSize: 14 }}>Composición proyectada de la Cámara</div>
         <div className="card-sub">
-          {data.totalEscanos} escaños distribuidos en {data.distritos.length} distritos electorales
+          {data.totalEscanos} escaños · click en un asiento para ver al diputado electo
         </div>
-        <Hemicycle escanos={escanos} partidos={partidos} total={data.totalEscanos} size="lg" />
+        <Hemicycle seats={seats} total={data.totalEscanos} size="lg" onSeatClick={onSeatClick} />
         <HemicycleLegend escanos={escanos} partidos={partidos} />
       </div>
 
@@ -108,11 +176,7 @@ function NacionalTab({ data }: { data: DiputadosData }) {
         <table className="senado-table">
           <thead>
             <tr>
-              <th>#</th>
-              <th>PARTIDO</th>
-              <th>VOTOS TOTALES</th>
-              <th className="tr">%</th>
-              <th className="tr">ESCAÑOS</th>
+              <th>#</th><th>PARTIDO</th><th>VOTOS TOTALES</th><th className="tr">%</th><th className="tr">ESCAÑOS</th>
             </tr>
           </thead>
           <tbody>
@@ -145,57 +209,93 @@ function NacionalTab({ data }: { data: DiputadosData }) {
 function DistritosTab({ data, onSelect }: { data: DiputadosData; onSelect: (d: DistritoDiputados) => void }) {
   const sorted = [...data.distritos].sort((a, b) => b.escanos - a.escanos);
 
+  // Adaptar DistritoDiputados a DistritoRegional para MapPartidos
+  const mapData = data.distritos.map(d => ({
+    codigo: d.codigo,
+    nombre: d.nombre,
+    pctActas: d.pctActas,
+    escanos: d.escanos,
+    totalVotosValidos: d.totalVotosValidos,
+    partidos: d.partidos.map(p => ({
+      codigo: p.codigo,
+      nombre: p.nombre,
+      votos: p.votos,
+      pct: p.pct,
+      candidatos: p.totalCandidatos,
+    })),
+    asignacion: Object.fromEntries(d.partidos.map(p => [p.codigo, p.escanos])),
+    ganador: d.ganador,
+  }));
+
   return (
-    <div className="card">
-      <div className="card-title">Distritos electorales</div>
-      <div className="card-sub">Click para ver los candidatos electos</div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 12, marginTop: 14 }}>
-        {sorted.map(d => {
-          const gan = d.ganador ? d.partidos.find(p => p.codigo === d.ganador) : null;
-          const ganColor = gan ? colorOfPartido(gan.codigo) : '#888';
-          const seatColors: string[] = [];
-          [...d.partidos]
-            .filter(p => p.escanos > 0)
-            .sort((a, b) => b.escanos - a.escanos)
-            .forEach(p => {
-              for (let i = 0; i < p.escanos; i++) seatColors.push(colorOfPartido(p.codigo));
-            });
-          return (
-            <button
-              key={d.codigo}
-              onClick={() => onSelect(d)}
-              className="distrito-card"
-              style={{ borderLeftColor: ganColor }}
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                <div className="distrito-name">{d.nombre}</div>
-                <div style={{ fontFamily: 'DM Mono', fontWeight: 800, fontSize: 18, color: 'var(--tx1)' }}>{d.escanos}</div>
-              </div>
-              <div className="distrito-meta">actas {d.pctActas.toFixed(1)}% · {d.totalVotosValidos.toLocaleString('es-PE')} votos válidos</div>
-              <div className="distrito-seats-row">
-                {seatColors.map((c, i) => (
-                  <span key={i} className="distrito-seat" style={{ background: c }} />
-                ))}
-              </div>
-              {gan && (
-                <div className="distrito-ganador" style={{ color: ganColor }}>
-                  <span style={{ width: 8, height: 8, borderRadius: 2, background: ganColor }} />
-                  {nombreCorto(gan.nombre)}
-                  <span className="distrito-ganador-pct">{gan.pct.toFixed(1)}%</span>
-                </div>
-              )}
-            </button>
-          );
-        })}
+    <>
+      <div className="card" style={{ marginBottom: 16 }}>
+        <div className="card-title">Mapa del Perú — partido ganador por distrito</div>
+        <div className="card-sub">Etiquetas: escaños del ganador · % de voto · click abre el detalle</div>
+        <MapPartidos
+          distritos={mapData as any}
+          onSelect={(d: any) => {
+            const orig = data.distritos.find(x => x.codigo === d.codigo);
+            if (orig) onSelect(orig);
+          }}
+        />
       </div>
-    </div>
+
+      <div className="card">
+        <div className="card-title">Distritos electorales</div>
+        <div className="card-sub">Click para ver los diputados electos</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 12, marginTop: 14 }}>
+          {sorted.map(d => {
+            const gan = d.ganador ? d.partidos.find(p => p.codigo === d.ganador) : null;
+            const ganColor = gan ? colorOfPartido(gan.codigo) : '#888';
+            const seatColors: string[] = [];
+            [...d.partidos].filter(p => p.escanos > 0)
+              .sort((a, b) => b.escanos - a.escanos)
+              .forEach(p => { for (let i = 0; i < p.escanos; i++) seatColors.push(colorOfPartido(p.codigo)); });
+            return (
+              <button
+                key={d.codigo}
+                onClick={() => onSelect(d)}
+                className="distrito-card"
+                style={{ borderLeftColor: ganColor }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                  <div className="distrito-name">{d.nombre}</div>
+                  <div style={{ fontFamily: 'DM Mono', fontWeight: 800, fontSize: 18, color: 'var(--tx1)' }}>{d.escanos}</div>
+                </div>
+                <div className="distrito-meta">actas {d.pctActas.toFixed(1)}% · {d.totalVotosValidos.toLocaleString('es-PE')} votos</div>
+                <div className="distrito-seats-row">
+                  {seatColors.map((c, i) => (
+                    <span key={i} className="distrito-seat" style={{ background: c }} />
+                  ))}
+                </div>
+                {gan && (
+                  <div className="distrito-ganador" style={{ color: ganColor }}>
+                    <span style={{ width: 8, height: 8, borderRadius: 2, background: ganColor }} />
+                    {nombreCorto(gan.nombre)}
+                    <span className="distrito-ganador-pct">{gan.pct.toFixed(1)}%</span>
+                  </div>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </>
   );
 }
 
-function DistritoModal({ distrito: d, onClose }: { distrito: DistritoDiputados; onClose: () => void }) {
+function DistritoModal({
+  distrito: d, onClose, onSeatClick, onDrillProvincias,
+}: {
+  distrito: DistritoDiputados;
+  onClose: () => void;
+  onSeatClick: (s: SeatInfo) => void;
+  onDrillProvincias?: () => void;
+}) {
   const partidosConEscanos = d.partidos.filter(p => p.escanos > 0);
-  const asignacion: Record<string, number> = {};
-  d.partidos.forEach(p => { asignacion[p.codigo] = p.escanos; });
+  const seats = useMemo(() => buildSeatsFromDistrito(d), [d]);
+  const hasDrill = !!(DEPT_UBIGEO[d.nombre.toUpperCase()] && onDrillProvincias);
 
   return (
     <div className="modal-overlay open" onClick={onClose}>
@@ -207,26 +307,62 @@ function DistritoModal({ distrito: d, onClose }: { distrito: DistritoDiputados; 
         </button>
         <h3 style={{ fontSize: 20 }}>{d.nombre}</h3>
         <div className="region-sub" style={{ marginBottom: 10 }}>
-          {d.escanos} diputados · actas {d.pctActas.toFixed(2)}% · {d.totalVotosValidos.toLocaleString('es-PE')} votos válidos
+          {d.escanos} diputados · actas {d.pctActas.toFixed(2)}% · {d.totalVotosValidos.toLocaleString('es-PE')} votos válidos · click en un asiento para ver al electo
         </div>
 
         <div style={{ margin: '8px 0 16px' }}>
-          <Hemicycle escanos={asignacion} partidos={d.partidos} total={d.escanos} size="sm" />
+          <Hemicycle seats={seats} total={d.escanos} size="sm" onSeatClick={onSeatClick} />
         </div>
+
+        {hasDrill && (
+          <button
+            onClick={onDrillProvincias}
+            className="goberna-btn"
+            style={{
+              width: '100%',
+              marginBottom: 16,
+              padding: '10px 14px',
+              background: 'linear-gradient(90deg, #d4a017, #c9a44a)',
+              color: '#1a1a1a',
+              border: 'none',
+              borderRadius: 8,
+              fontFamily: 'Montserrat, sans-serif',
+              fontWeight: 700,
+              fontSize: 12,
+              letterSpacing: 1.5,
+              cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+              transition: 'transform .15s',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.02)')}
+            onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
+          >
+            VER PROVINCIAS DE {d.nombre.toUpperCase()}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </button>
+        )}
 
         <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--tx3)', letterSpacing: 1.5, marginBottom: 10 }}>
           DIPUTADOS ELECTOS
         </div>
 
         {partidosConEscanos.map(p => (
-          <PartyElectosBlock key={p.codigo} partido={p} />
+          <PartyElectosBlock key={p.codigo} partido={p} onSeatClick={onSeatClick} distritoNombre={d.nombre} />
         ))}
       </div>
     </div>
   );
 }
 
-function PartyElectosBlock({ partido: p }: { partido: { codigo: string; nombre: string; pct: number; votos: number; escanos: number; candidatos: CandidatoElecto[] } }) {
+function PartyElectosBlock({
+  partido: p, onSeatClick, distritoNombre,
+}: {
+  partido: { codigo: string; nombre: string; pct: number; votos: number; escanos: number; candidatos: CandidatoElecto[] };
+  onSeatClick: (s: SeatInfo) => void;
+  distritoNombre: string;
+}) {
   const color = colorOfPartido(p.codigo);
   const electos = p.candidatos.filter(c => c.electo);
 
@@ -238,13 +374,8 @@ function PartyElectosBlock({ partido: p }: { partido: { codigo: string; nombre: 
           <span style={{ marginLeft: 8, fontSize: 12, color }}>{p.pct.toFixed(2)}%</span>
         </div>
         <span style={{
-          fontFamily: 'DM Mono',
-          fontWeight: 800,
-          fontSize: 16,
-          color: '#fff',
-          background: color,
-          padding: '3px 10px',
-          borderRadius: 12,
+          fontFamily: 'DM Mono', fontWeight: 800, fontSize: 16,
+          color: '#fff', background: color, padding: '3px 10px', borderRadius: 12,
         }}>
           {p.escanos}
         </span>
@@ -252,24 +383,36 @@ function PartyElectosBlock({ partido: p }: { partido: { codigo: string; nombre: 
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 6 }}>
         {electos.map((c, i) => (
-          <div key={c.dni || i} style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-            padding: '6px 8px',
-            background: 'var(--bg-card)',
-            borderRadius: 6,
-            border: '1px solid var(--border)',
-          }}>
+          <button
+            key={c.dni || i}
+            onClick={() => onSeatClick({
+              color,
+              partyCodigo: p.codigo,
+              partyName: p.nombre,
+              candidatoNombre: c.nombre,
+              candidatoDni: c.dni,
+              votosPreferenciales: c.votosPreferenciales,
+              distrito: distritoNombre,
+              orderInParty: i,
+            })}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 8,
+              padding: '6px 8px',
+              background: 'var(--bg-card)', borderRadius: 6,
+              border: '1px solid var(--border)',
+              cursor: 'pointer', textAlign: 'left',
+              transition: 'transform .15s, border-color .15s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.borderColor = color; }}
+            onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.borderColor = 'var(--border)'; }}
+          >
             <div style={{
               width: 24, height: 24, borderRadius: '50%',
               background: color, color: '#fff',
               display: 'grid', placeItems: 'center',
               fontSize: 10, fontFamily: 'DM Mono', fontWeight: 700,
               flexShrink: 0,
-            }}>
-              {i + 1}
-            </div>
+            }}>{i + 1}</div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--tx1)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {c.nombre.split(' ').slice(0, 3).join(' ')}
@@ -278,7 +421,7 @@ function PartyElectosBlock({ partido: p }: { partido: { codigo: string; nombre: 
                 {c.votosPreferenciales.toLocaleString('es-PE')} pref.
               </div>
             </div>
-          </div>
+          </button>
         ))}
       </div>
     </div>

@@ -309,6 +309,78 @@ button { font: inherit; cursor: pointer; }
   to   { opacity: 1; transform: translateY(0);   filter: blur(0); }
 }
 
+/* ───────── Seat card (click en asiento) ───────── */
+.seat-card-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  animation: fadeUp .2s ease both;
+}
+.seat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--c);
+  border-radius: 14px;
+  padding: 22px 26px 20px;
+  max-width: 400px; width: 100%;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  animation: modalIn .3s var(--back-curve);
+}
+.seat-card-close {
+  position: absolute; top: 10px; right: 12px;
+  background: none; border: none; color: var(--tx3);
+  padding: 6px; border-radius: 6px;
+  cursor: pointer;
+  transition: background .15s;
+}
+.seat-card-close:hover { background: rgba(0,0,0,0.06); color: var(--tx1); }
+.seat-card-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 10px; font-weight: 700; letter-spacing: 1.8px;
+  color: var(--c);
+  padding: 4px 10px;
+  background: color-mix(in srgb, var(--c) 10%, transparent);
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+.seat-card-bullet {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--c);
+  animation: livePulse 2s infinite;
+}
+.seat-card-name {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  line-height: 1.15;
+  color: var(--tx1);
+  margin-bottom: 4px;
+}
+.seat-card-party {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--c);
+  margin-bottom: 16px;
+}
+.seat-card-rows {
+  display: flex; flex-direction: column; gap: 2px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.seat-card-row {
+  display: flex; justify-content: space-between;
+  padding: 6px 0;
+  font-size: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.seat-card-row:last-child { border-bottom: none; }
+.seat-card-key { color: var(--tx3); font-weight: 500; }
+.seat-card-val { color: var(--tx1); font-weight: 600; font-family: 'DM Mono', monospace; }
+
 /* ───────── Hemiciclo parlamentario ───────── */
 .hemicycle-svg {
   display: block;
