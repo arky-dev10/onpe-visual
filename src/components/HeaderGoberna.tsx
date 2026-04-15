@@ -1,10 +1,9 @@
-const NAV = [
-  'NOSOTROS',
-  'CONSULTORÍA',
-  'ESCUELA DE GOBIERNO',
-  'RED INTERNACIONAL',
-  'LIBRERÍA',
-  'PUBLICACIONES',
+const NAV: { label: string; href: string }[] = [
+  { label: 'PRESIDENCIAL', href: '#' },
+  { label: 'SENADO',       href: '#senado' },
+  { label: 'NOSOTROS',     href: '#' },
+  { label: 'CONSULTORÍA',  href: '#' },
+  { label: 'PUBLICACIONES',href: '#' },
 ];
 
 export function HeaderGoberna() {
@@ -21,7 +20,7 @@ export function HeaderGoberna() {
 
         <nav className="gob-nav">
           {NAV.map((n) => (
-            <a key={n} className="gob-nav-link" href="#">{n}</a>
+            <a key={n.label} className="gob-nav-link" href={n.href}>{n.label}</a>
           ))}
         </nav>
 

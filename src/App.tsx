@@ -11,6 +11,7 @@ import { RegionModal } from './components/RegionModal';
 import { SecondRoundBanner } from './components/SecondRoundBanner';
 import { CriticalGap } from './components/CriticalGap';
 import { HeaderGoberna } from './components/HeaderGoberna';
+import { SenadoPage } from './components/SenadoPage';
 import { MOCK_ONPE, MOCK_DATUM } from './data/mock';
 import { loadData } from './data/source';
 import { useTheme } from './components/ThemeToggle';
@@ -26,9 +27,18 @@ const PARTY_MAP: Record<CandKey, { party: string; initials: string }> = {
   belmont:  { party: 'País para Todos',     initials: 'RB'  },
 };
 
+type View = 'presidencial' | 'senado';
+
 function App() {
   const [theme, setTheme] = useTheme();
   const [tab, setTab] = useState<TabId>('onpe');
+  const [view, setView] = useState<View>(() => (window.location.hash === '#senado' ? 'senado' : 'presidencial'));
+
+  useEffect(() => {
+    const onHash = () => setView(window.location.hash === '#senado' ? 'senado' : 'presidencial');
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  }, []);
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState<RegionResult | null>(null);
   const [onpeData, setOnpeData] = useState<DashboardData>(MOCK_ONPE);
@@ -72,6 +82,15 @@ function App() {
   };
 
   const sourceLabel = tab === 'onpe' ? 'ONPE parcial' : 'Datum CR 100%';
+
+  if (view === 'senado') {
+    return (
+      <>
+        <HeaderGoberna />
+        <SenadoPage />
+      </>
+    );
+  }
 
   return (
     <>
