@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { loadSenado, colorOfPartido, nombreCorto, type SenadoData, type DistritoRegional } from '../data/senadoSource';
-import { Hemicycle } from './Hemicycle';
+import { Hemicycle, HemicycleLegend } from './Hemicycle';
 
 type SubTab = 'nacional' | 'regional';
 
@@ -39,8 +39,8 @@ export function SenadoPage() {
         </div>
         <div className="hero-center">
           <div className="hero-label">ACTAS CONTABILIZADAS</div>
-          <div className="hero-pct">
-            {data.nacional.pctActas.toFixed(3).split('.')[0]}
+          <div className="hero-pct" key={data.nacional.pctActas}>
+            <span className="num-flash">{data.nacional.pctActas.toFixed(3).split('.')[0]}</span>
             <span className="hero-pct-sign">.{data.nacional.pctActas.toFixed(3).split('.')[1]}%</span>
           </div>
           <div style={{ fontSize: 11, color: 'var(--tx3)', marginTop: 4 }}>
@@ -69,51 +69,52 @@ export function SenadoPage() {
 
 function NacionalTab({ data }: { data: SenadoData }) {
   const n = data.nacional;
-  const top = n.partidos.slice(0, 10);
+  const pasaValla = n.partidos.filter(p => p.pct >= n.valla);
+  const maxPct = Math.max(...n.partidos.slice(0, 12).map(p => p.pct), 1);
+
   return (
     <>
-      <div className="card" style={{ marginBottom: 16 }}>
-        <div className="card-title">Distribución proyectada del Senado (D'Hondt · valla {n.valla}%)</div>
+      <div className="card" style={{ marginBottom: 16, padding: '20px 20px 24px' }}>
+        <div className="card-title" style={{ fontSize: 14 }}>Distribución proyectada del Senado</div>
         <div className="card-sub">
-          {n.partidos.filter(p => p.pct >= n.valla).length} partidos superan la valla del {n.valla}%
+          Asignación por D'Hondt · valla {n.valla}% · {pasaValla.length} partido{pasaValla.length !== 1 ? 's' : ''} pasa{pasaValla.length === 1 ? '' : 'n'}
         </div>
-        <Hemicycle escanos={n.escanos} partidos={n.partidos} total={n.escanosTotales} />
+
+        <Hemicycle escanos={n.escanos} partidos={n.partidos} total={n.escanosTotales} size="lg" />
+
+        <HemicycleLegend escanos={n.escanos} partidos={n.partidos} />
       </div>
 
       <div className="card">
-        <div className="card-title">Ranking de partidos</div>
-        <div className="card-sub">Top por votos válidos nacional</div>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+        <div className="card-title">Ranking nacional</div>
+        <div className="card-sub">Top partidos por votos válidos · con escaños proyectados</div>
+        <table className="senado-table">
           <thead>
-            <tr style={{ borderBottom: '2px solid var(--border)', color: 'var(--tx3)', fontSize: 11, letterSpacing: 1 }}>
-              <th style={{ padding: '8px 4px', textAlign: 'left' }}>#</th>
-              <th style={{ padding: '8px 4px', textAlign: 'left' }}>PARTIDO</th>
-              <th style={{ padding: '8px 4px', textAlign: 'right' }}>VOTOS</th>
-              <th style={{ padding: '8px 4px', textAlign: 'right' }}>%</th>
-              <th style={{ padding: '8px 4px', textAlign: 'right' }}>ESCAÑOS</th>
+            <tr>
+              <th>#</th>
+              <th>PARTIDO</th>
+              <th>VOTOS</th>
+              <th className="tr">%</th>
+              <th className="tr">ESCAÑOS</th>
             </tr>
           </thead>
           <tbody>
-            {top.map((p, i) => {
+            {n.partidos.slice(0, 12).map((p, i) => {
               const seats = n.escanos[p.codigo] || 0;
-              const pasaValla = p.pct >= n.valla;
+              const dentro = p.pct >= n.valla;
               return (
-                <tr key={p.codigo} style={{ borderBottom: '1px solid var(--border)', opacity: pasaValla ? 1 : .55 }}>
-                  <td style={{ padding: '8px 4px', color: 'var(--tx3)', fontFamily: 'DM Mono', fontWeight: 700 }}>{i + 1}</td>
-                  <td style={{ padding: '8px 4px' }}>
-                    <span style={{ display: 'inline-block', width: 10, height: 10, borderRadius: 2, background: colorOfPartido(p.codigo), marginRight: 8, verticalAlign: 'middle' }} />
+                <tr key={p.codigo} className={dentro ? '' : 'under-valla'}>
+                  <td style={{ color: 'var(--tx3)', fontFamily: 'DM Mono', fontWeight: 700 }}>{i + 1}</td>
+                  <td>
+                    <span style={{ display: 'inline-block', width: 12, height: 12, borderRadius: 3, background: colorOfPartido(p.codigo), marginRight: 10, verticalAlign: 'middle', boxShadow: '0 0 0 1px rgba(0,0,0,.06)' }} />
                     <span style={{ fontWeight: 600 }}>{nombreCorto(p.nombre)}</span>
-                    {!pasaValla && <span style={{ fontSize: 10, color: 'var(--tx3)', marginLeft: 8 }}>bajo valla</span>}
+                    <span className="senado-bar">
+                      <span className="senado-bar-fill" style={{ width: `${(p.pct / maxPct) * 100}%`, background: colorOfPartido(p.codigo) }} />
+                    </span>
                   </td>
-                  <td style={{ padding: '8px 4px', textAlign: 'right', fontFamily: 'DM Mono', color: 'var(--tx2)' }}>
-                    {p.votos.toLocaleString('es-PE')}
-                  </td>
-                  <td style={{ padding: '8px 4px', textAlign: 'right', fontFamily: 'DM Mono', fontWeight: 600, color: colorOfPartido(p.codigo) }}>
-                    {p.pct.toFixed(2)}%
-                  </td>
-                  <td style={{ padding: '8px 4px', textAlign: 'right', fontFamily: 'DM Mono', fontWeight: 700, fontSize: 14 }}>
-                    {seats || '—'}
-                  </td>
+                  <td style={{ fontFamily: 'DM Mono', color: 'var(--tx2)' }}>{p.votos.toLocaleString('es-PE')}</td>
+                  <td className="tr" style={{ fontWeight: 600, color: colorOfPartido(p.codigo) }}>{p.pct.toFixed(2)}%</td>
+                  <td className="tr" style={{ fontWeight: 800, fontSize: 15 }}>{seats || '—'}</td>
                 </tr>
               );
             })}
@@ -127,65 +128,59 @@ function NacionalTab({ data }: { data: SenadoData }) {
 function RegionalTab({ data, onSelect }: { data: SenadoData; onSelect: (d: DistritoRegional) => void }) {
   const sorted = [...data.regional.distritos].sort((a, b) => a.nombre.localeCompare(b.nombre));
   const resumen = data.regional.resumenPartidos.slice(0, 10);
+  const resumenEscanos: Record<string, number> = {};
+  data.regional.resumenPartidos.forEach(p => { resumenEscanos[p.codigo] = p.escanos; });
 
   return (
     <>
-      <div className="card" style={{ marginBottom: 16 }}>
-        <div className="card-title">Total nacional de escaños regionales</div>
-        <div className="card-sub">{data.regional.escanosTotales} escaños · 27 distritos · D'Hondt por distrito</div>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, marginTop: 12 }}>
-          <thead>
-            <tr style={{ borderBottom: '2px solid var(--border)', color: 'var(--tx3)', fontSize: 11, letterSpacing: 1 }}>
-              <th style={{ padding: '8px 4px', textAlign: 'left' }}>PARTIDO</th>
-              <th style={{ padding: '8px 4px', textAlign: 'right' }}>ESCAÑOS</th>
-            </tr>
-          </thead>
-          <tbody>
-            {resumen.map(r => (
-              <tr key={r.codigo} style={{ borderBottom: '1px solid var(--border)' }}>
-                <td style={{ padding: '6px 4px' }}>
-                  <span style={{ display: 'inline-block', width: 10, height: 10, borderRadius: 2, background: colorOfPartido(r.codigo), marginRight: 8, verticalAlign: 'middle' }} />
-                  <span style={{ fontWeight: 600 }}>{nombreCorto(r.nombre)}</span>
-                </td>
-                <td style={{ padding: '6px 4px', textAlign: 'right', fontFamily: 'DM Mono', fontWeight: 700 }}>
-                  {r.escanos}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="card" style={{ marginBottom: 16, padding: '20px' }}>
+        <div className="card-title" style={{ fontSize: 14 }}>Escaños regionales consolidados</div>
+        <div className="card-sub">
+          {data.regional.escanosTotales} escaños · 27 distritos electorales · D'Hondt por distrito
+        </div>
+        <Hemicycle escanos={resumenEscanos} partidos={data.regional.resumenPartidos} total={data.regional.escanosTotales} size="lg" />
+        <HemicycleLegend escanos={resumenEscanos} partidos={resumen} />
       </div>
 
       <div className="card">
         <div className="card-title">Distritos electorales</div>
-        <div className="card-sub">Click para ver asignación completa de escaños</div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 10, marginTop: 12 }}>
+        <div className="card-sub">Click para ver la asignación completa de escaños</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 12, marginTop: 14 }}>
           {sorted.map(d => {
             const gan = d.ganador ? d.partidos.find(p => p.codigo === d.ganador) : null;
+            const ganColor = gan ? colorOfPartido(gan.codigo) : '#888';
+            // seats row: cuadros del color de cada escaño asignado
+            const seatColors: string[] = [];
+            [...d.partidos]
+              .map(p => ({ codigo: p.codigo, seats: d.asignacion[p.codigo] || 0 }))
+              .sort((a, b) => b.seats - a.seats)
+              .forEach(p => {
+                for (let i = 0; i < p.seats; i++) seatColors.push(colorOfPartido(p.codigo));
+              });
             return (
               <button
                 key={d.codigo}
                 onClick={() => onSelect(d)}
-                style={{
-                  textAlign: 'left',
-                  background: 'var(--bg-card)',
-                  border: '1px solid var(--border)',
-                  borderLeft: `4px solid ${gan ? colorOfPartido(gan.codigo) : '#888'}`,
-                  borderRadius: 8,
-                  padding: '10px 12px',
-                  cursor: 'pointer',
-                  transition: 'transform .15s, background .15s',
-                }}
-                onMouseEnter={e => (e.currentTarget.style.transform = 'translateY(-1px)')}
-                onMouseLeave={e => (e.currentTarget.style.transform = '')}
+                className="distrito-card"
+                style={{ borderLeftColor: ganColor }}
               >
-                <div style={{ fontWeight: 700, fontSize: 13 }}>{d.nombre}</div>
-                <div style={{ fontSize: 11, color: 'var(--tx3)', marginTop: 2 }}>
+                <div className="distrito-name">{d.nombre}</div>
+                <div className="distrito-meta">
                   {d.escanos} escaño{d.escanos !== 1 ? 's' : ''} · actas {d.pctActas.toFixed(1)}%
                 </div>
+                <div className="distrito-seats-row">
+                  {seatColors.map((c, i) => (
+                    <span key={i} className="distrito-seat" style={{ background: c }} />
+                  ))}
+                  {seatColors.length === 0 && Array.from({ length: d.escanos }).map((_, i) => (
+                    <span key={i} className="distrito-seat" style={{ background: 'var(--bg-alt)' }} />
+                  ))}
+                </div>
                 {gan && (
-                  <div style={{ fontSize: 11, marginTop: 4, color: colorOfPartido(gan.codigo), fontWeight: 600 }}>
-                    {nombreCorto(gan.nombre)} · {gan.pct.toFixed(1)}%
+                  <div className="distrito-ganador" style={{ color: ganColor }}>
+                    <span style={{ width: 8, height: 8, borderRadius: 2, background: ganColor }} />
+                    {nombreCorto(gan.nombre)}
+                    <span className="distrito-ganador-pct">{gan.pct.toFixed(1)}%</span>
                   </div>
                 )}
               </button>
@@ -201,16 +196,21 @@ function DistritoModal({ distrito: d, onClose }: { distrito: DistritoRegional; o
   const topPartidos = d.partidos.slice(0, 8);
   return (
     <div className="modal-overlay open" onClick={onClose}>
-      <div className="modal" onClick={e => e.stopPropagation()}>
+      <div className="modal" onClick={e => e.stopPropagation()} style={{ maxWidth: 520 }}>
         <button className="modal-close" onClick={onClose} aria-label="Cerrar">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" width="16" height="16">
             <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
           </svg>
         </button>
-        <h3>{d.nombre}</h3>
+        <h3 style={{ fontSize: 18 }}>{d.nombre}</h3>
         <div className="region-sub">
           {d.escanos} escaños · actas {d.pctActas.toFixed(2)}% · {d.totalVotosValidos.toLocaleString('es-PE')} votos válidos
         </div>
+
+        <div style={{ margin: '10px 0 18px' }}>
+          <Hemicycle escanos={d.asignacion} partidos={d.partidos} total={d.escanos} size="sm" />
+        </div>
+
         {topPartidos.map(p => {
           const asignados = d.asignacion[p.codigo] || 0;
           return (
@@ -220,10 +220,15 @@ function DistritoModal({ distrito: d, onClose }: { distrito: DistritoRegional; o
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span className="name">{nombreCorto(p.nombre)}</span>
                   <span className="pct" style={{ color: colorOfPartido(p.codigo) }}>
-                    {p.pct.toFixed(2)}% {asignados > 0 && <span style={{ marginLeft: 6, color: 'var(--tx1)' }}>· {asignados} escaño{asignados !== 1 ? 's' : ''}</span>}
+                    {p.pct.toFixed(2)}%
+                    {asignados > 0 && (
+                      <span style={{ marginLeft: 8, color: 'var(--tx1)', background: 'var(--bg-alt)', padding: '2px 8px', borderRadius: 4, fontSize: 12 }}>
+                        {asignados} escaño{asignados !== 1 ? 's' : ''}
+                      </span>
+                    )}
                   </span>
                 </div>
-                <div className="modal-bar" style={{ width: `${(p.pct / topPartidos[0].pct) * 100}%`, background: colorOfPartido(p.codigo) }} />
+                <div className="modal-bar" style={{ width: `${(p.pct / topPartidos[0].pct) * 100}%`, background: colorOfPartido(p.codigo), marginTop: 6 }} />
               </div>
             </div>
           );
