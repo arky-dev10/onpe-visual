@@ -16,7 +16,7 @@ permissions:
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
 
@@ -30,21 +30,28 @@ jobs:
       - name: Install Playwright Chromium
         run: bunx playwright install --with-deps chromium
 
-      - name: Scrape ONPE
-        run: bun run scrape
+      - name: Loop scrape cada 60s por 5 min
         env:
-          # evita color output que ensucia logs
           NO_COLOR: "1"
-
-      - name: Commit & push si cambió
         run: |
           git config user.name  "onpe-bot"
           git config user.email "onpe-bot@users.noreply.github.com"
-          git add public/data/onpe.json public/data/onpe-history.json || true
-          if git diff --cached --quiet; then
-            echo "sin cambios"
-            exit 0
-          fi
-          PCT=$(node -e "console.log(JSON.parse(require('fs').readFileSync('public/data/onpe.json')).pctActas)")
-          git commit -m "chore(onpe): ${PCT}% actas · $(date -u +%FT%TZ)"
-          git push
+
+          for i in 1 2 3 4 5; do
+            echo "── iteración $i/5 ── $(date -u +%T)"
+            bun run scrape || echo "  scrape falló, sigo"
+
+            git add public/data/onpe.json public/data/onpe-history.json || true
+            if ! git diff --cached --quiet; then
+              PCT=$(node -e "console.log(JSON.parse(require('fs').readFileSync('public/data/onpe.json')).pctActas)")
+              git commit -m "chore(onpe): ${PCT}% actas · $(date -u +%FT%TZ)"
+              # pull --rebase por si el workflow previo aún corría
+              git pull --rebase origin main || true
+              git push || echo "  push falló, reintento próxima iteración"
+            else
+              echo "  sin cambios"
+            fi
+
+            # no dormir en la última iteración
+            if [ "$i" -lt 5 ]; then sleep 60; fi
+          done
