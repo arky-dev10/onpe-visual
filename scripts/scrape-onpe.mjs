@@ -133,6 +133,9 @@ async function scrape() {
       belmont: pct.belmont,
       actasRevisadas: tot.data.contabilizadas,
       actasTotal: tot.data.totalActas,
+      // Para proyección regional ponderada
+      totalVotosValidos: tot.data.totalVotosValidos || 0,
+      totalVotosEmitidos: tot.data.totalVotosEmitidos || 0,
     };
   }
 
@@ -171,6 +174,41 @@ async function scrape() {
     ? history.map(h => ({ pct: h.pct, fujimori: h.fujimori, rla: h.rla, sanchez: h.sanchez, nieto: h.nieto, belmont: h.belmont }))
     : generateSyntheticSeries(byKey, t.actasContabilizadas);
 
+  // 4b. Proyección al 100% — método regional ponderado.
+  //
+  // Para cada región, asumimos que la composición de voto observada hasta ahora
+  // se mantiene en las actas pendientes de esa misma región. Multiplicamos el % de
+  // cada candidato por los votos válidos PROYECTADOS de la región (= votos actuales
+  // / pct actas contadas), y sumamos sobre todas las regiones para obtener votos
+  // totales proyectados por candidato a nivel nacional. Luego renormalizamos a %.
+  //
+  // Esto captura el sesgo geográfico: si quedan muchas actas en regiones donde
+  // gana X, el % nacional de X subirá. Mucho más preciso que extrapolar el % nacional.
+  function computeProjection(regs) {
+    const sums = { fujimori: 0, rla: 0, sanchez: 0, nieto: 0, belmont: 0 };
+    let totalProy = 0;
+    for (const r of regs) {
+      const a = Number(r.pct) || 0;
+      const v = Number(r.totalVotosValidos) || 0;
+      if (a <= 0 || v <= 0) continue;
+      // Votos válidos proyectados para esa región al 100%
+      const proyReg = v / (a / 100);
+      totalProy += proyReg;
+      for (const k of CAND_KEYS) {
+        const pct = Number(r[k]) || 0;
+        sums[k] += proyReg * (pct / 100);
+      }
+    }
+    if (totalProy <= 0) return { ...byKey };
+    const out = {};
+    for (const k of CAND_KEYS) {
+      out[k] = Number(((sums[k] / totalProy) * 100).toFixed(3));
+    }
+    return out;
+  }
+  const projection = computeProjection(regions);
+  console.log(`  proyección 100%: ${CAND_KEYS.map(k => `${k.slice(0,4)}=${projection[k].toFixed(2)}`).join(' ')} (vs actual ${CAND_KEYS.map(k => byKey[k].toFixed(2)).join('/')})`);
+
   // 5. Probabilidades por ranking
   const ranking = [...CAND_KEYS].sort((a, b) => byKey[b] - byKey[a]);
   const [first, second, third] = ranking;
@@ -198,7 +236,8 @@ async function scrape() {
     regions,
     extranjero: extranjero || regions[0],
     series,
-    projection: { ...byKey },
+    projection,
+    projectionMethod: 'regional-weighted',
     votes: { ...votesByKey },
     probabilities: probs,
     _scrapedAt: new Date().toISOString(),

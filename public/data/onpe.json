@@ -1,12 +1,12 @@
 {
-  "pctActas": 91.68,
-  "actasRevisadas": 85048,
+  "pctActas": 91.698,
+  "actasRevisadas": 85065,
   "actasTotal": 92766,
-  "votosEmitidos": 18578217,
-  "votosFaltantes": 1545708,
+  "votosEmitidos": 18581558,
+  "votosFaltantes": 1542641,
   "proximoRefresh": "4:00",
-  "fechaActualizacion": "15-abr., 05:47 p. m.",
-  "jeeStatus": "4,683 actas en JEE",
+  "fechaActualizacion": "15-abr., 06:21 p. m.",
+  "jeeStatus": "4,686 actas en JEE",
   "regions": [
     {
       "name": "Amazonas",
@@ -17,7 +17,9 @@
       "nieto": 3.673,
       "belmont": 10.68,
       "actasRevisadas": 1197,
-      "actasTotal": 1278
+      "actasTotal": 1278,
+      "totalVotosValidos": 153461,
+      "totalVotosEmitidos": 201505
     },
     {
       "name": "Áncash",
@@ -28,7 +30,9 @@
       "nieto": 7.447,
       "belmont": 10.042,
       "actasRevisadas": 3158,
-      "actasTotal": 3472
+      "actasTotal": 3472,
+      "totalVotosValidos": 495520,
+      "totalVotosEmitidos": 635770
     },
     {
       "name": "Apurímac",
@@ -39,7 +43,9 @@
       "nieto": 3.661,
       "belmont": 14.183,
       "actasRevisadas": 1269,
-      "actasTotal": 1317
+      "actasTotal": 1317,
+      "totalVotosValidos": 193872,
+      "totalVotosEmitidos": 246096
     },
     {
       "name": "Arequipa",
@@ -50,7 +56,9 @@
       "nieto": 18.665,
       "belmont": 10.886,
       "actasRevisadas": 4124,
-      "actasTotal": 4215
+      "actasTotal": 4215,
+      "totalVotosValidos": 861779,
+      "totalVotosEmitidos": 972944
     },
     {
       "name": "Ayacucho",
@@ -61,7 +69,9 @@
       "nieto": 5.551,
       "belmont": 14.48,
       "actasRevisadas": 1808,
-      "actasTotal": 1900
+      "actasTotal": 1900,
+      "totalVotosValidos": 270409,
+      "totalVotosEmitidos": 338463
     },
     {
       "name": "Cajamarca",
@@ -72,7 +82,9 @@
       "nieto": 4.609,
       "belmont": 11.007,
       "actasRevisadas": 4000,
-      "actasTotal": 4240
+      "actasTotal": 4240,
+      "totalVotosValidos": 609370,
+      "totalVotosEmitidos": 777177
     },
     {
       "name": "Callao",
@@ -83,7 +95,9 @@
       "nieto": 15.031,
       "belmont": 8.142,
       "actasRevisadas": 2758,
-      "actasTotal": 2898
+      "actasTotal": 2898,
+      "totalVotosValidos": 551376,
+      "totalVotosEmitidos": 638595
     },
     {
       "name": "Cusco",
@@ -94,7 +108,9 @@
       "nieto": 9.23,
       "belmont": 15.499,
       "actasRevisadas": 3631,
-      "actasTotal": 3983
+      "actasTotal": 3983,
+      "totalVotosValidos": 641005,
+      "totalVotosEmitidos": 775397
     },
     {
       "name": "Huancavelica",
@@ -105,7 +121,9 @@
       "nieto": 3.243,
       "belmont": 13.535,
       "actasRevisadas": 1208,
-      "actasTotal": 1273
+      "actasTotal": 1273,
+      "totalVotosValidos": 164462,
+      "totalVotosEmitidos": 206857
     },
     {
       "name": "Huánuco",
@@ -116,7 +134,9 @@
       "nieto": 4.71,
       "belmont": 14.176,
       "actasRevisadas": 2127,
-      "actasTotal": 2341
+      "actasTotal": 2341,
+      "totalVotosValidos": 312709,
+      "totalVotosEmitidos": 400978
     },
     {
       "name": "Ica",
@@ -127,7 +147,9 @@
       "nieto": 9.864,
       "belmont": 10.715,
       "actasRevisadas": 2210,
-      "actasTotal": 2443
+      "actasTotal": 2443,
+      "totalVotosValidos": 437507,
+      "totalVotosEmitidos": 527701
     },
     {
       "name": "Junín",
@@ -138,18 +160,22 @@
       "nieto": 8.024,
       "belmont": 11.132,
       "actasRevisadas": 3520,
-      "actasTotal": 3691
+      "actasTotal": 3691,
+      "totalVotosValidos": 607965,
+      "totalVotosEmitidos": 749561
     },
     {
       "name": "La Libertad",
-      "pct": 92.135,
-      "fujimori": 20.243,
-      "rla": 8.243,
-      "sanchez": 9.44,
-      "nieto": 9.86,
-      "belmont": 7.092,
-      "actasRevisadas": 4885,
-      "actasTotal": 5302
+      "pct": 92.21,
+      "fujimori": 20.25,
+      "rla": 8.239,
+      "sanchez": 9.432,
+      "nieto": 9.857,
+      "belmont": 7.09,
+      "actasRevisadas": 4889,
+      "actasTotal": 5302,
+      "totalVotosValidos": 861152,
+      "totalVotosEmitidos": 1074981
     },
     {
       "name": "Lambayeque",
@@ -160,29 +186,35 @@
       "nieto": 10.354,
       "belmont": 7.505,
       "actasRevisadas": 3420,
-      "actasTotal": 3590
+      "actasTotal": 3590,
+      "totalVotosValidos": 637639,
+      "totalVotosEmitidos": 779709
     },
     {
       "name": "Lima",
-      "pct": 93.172,
+      "pct": 93.192,
       "fujimori": 17.858,
       "rla": 19.955,
       "sanchez": 3.273,
       "nieto": 15.1,
-      "belmont": 9.123,
-      "actasRevisadas": 27250,
-      "actasTotal": 29247
+      "belmont": 9.122,
+      "actasRevisadas": 27256,
+      "actasTotal": 29247,
+      "totalVotosValidos": 5683191,
+      "totalVotosEmitidos": 6437819
     },
     {
       "name": "Loreto",
-      "pct": 81.201,
-      "fujimori": 28.323,
-      "rla": 6.831,
-      "sanchez": 9.316,
-      "nieto": 3.704,
-      "belmont": 4.242,
-      "actasRevisadas": 2190,
-      "actasTotal": 2697
+      "pct": 81.313,
+      "fujimori": 28.319,
+      "rla": 6.83,
+      "sanchez": 9.328,
+      "nieto": 3.703,
+      "belmont": 4.24,
+      "actasRevisadas": 2193,
+      "actasTotal": 2697,
+      "totalVotosValidos": 282463,
+      "totalVotosEmitidos": 372460
     },
     {
       "name": "Madre de Dios",
@@ -193,7 +225,9 @@
       "nieto": 5.215,
       "belmont": 14.613,
       "actasRevisadas": 453,
-      "actasTotal": 507
+      "actasTotal": 507,
+      "totalVotosValidos": 72373,
+      "totalVotosEmitidos": 93108
     },
     {
       "name": "Moquegua",
@@ -204,7 +238,9 @@
       "nieto": 10.424,
       "belmont": 12.17,
       "actasRevisadas": 549,
-      "actasTotal": 578
+      "actasTotal": 578,
+      "totalVotosValidos": 108556,
+      "totalVotosEmitidos": 124803
     },
     {
       "name": "Pasco",
@@ -215,18 +251,22 @@
       "nieto": 4.466,
       "belmont": 11.99,
       "actasRevisadas": 743,
-      "actasTotal": 802
+      "actasTotal": 802,
+      "totalVotosValidos": 107625,
+      "totalVotosEmitidos": 135412
     },
     {
       "name": "Piura",
-      "pct": 91.062,
-      "fujimori": 27.993,
-      "rla": 6.706,
-      "sanchez": 11.199,
-      "nieto": 8.822,
+      "pct": 91.157,
+      "fujimori": 27.987,
+      "rla": 6.704,
+      "sanchez": 11.219,
+      "nieto": 8.816,
       "belmont": 7.478,
-      "actasRevisadas": 4809,
-      "actasTotal": 5281
+      "actasRevisadas": 4814,
+      "actasTotal": 5281,
+      "totalVotosValidos": 805107,
+      "totalVotosEmitidos": 1047275
     },
     {
       "name": "Puno",
@@ -237,7 +277,9 @@
       "nieto": 4.164,
       "belmont": 17.713,
       "actasRevisadas": 3292,
-      "actasTotal": 3397
+      "actasTotal": 3397,
+      "totalVotosValidos": 631810,
+      "totalVotosEmitidos": 746600
     },
     {
       "name": "San Martín",
@@ -248,7 +290,9 @@
       "nieto": 4.487,
       "belmont": 11.384,
       "actasRevisadas": 2372,
-      "actasTotal": 2534
+      "actasTotal": 2534,
+      "totalVotosValidos": 365553,
+      "totalVotosEmitidos": 499462
     },
     {
       "name": "Tacna",
@@ -259,7 +303,9 @@
       "nieto": 11.479,
       "belmont": 14.583,
       "actasRevisadas": 989,
-      "actasTotal": 1041
+      "actasTotal": 1041,
+      "totalVotosValidos": 209943,
+      "totalVotosEmitidos": 236582
     },
     {
       "name": "Tumbes",
@@ -270,7 +316,9 @@
       "nieto": 5.56,
       "belmont": 4.885,
       "actasRevisadas": 573,
-      "actasTotal": 632
+      "actasTotal": 632,
+      "totalVotosValidos": 100640,
+      "totalVotosEmitidos": 128393
     },
     {
       "name": "Ucayali",
@@ -281,30 +329,36 @@
       "nieto": 4.411,
       "belmont": 8.521,
       "actasRevisadas": 1373,
-      "actasTotal": 1564
+      "actasTotal": 1564,
+      "totalVotosValidos": 198876,
+      "totalVotosEmitidos": 265303
     },
     {
       "name": "Extranjero",
-      "pct": 45.026,
-      "fujimori": 15.786,
-      "rla": 29.299,
-      "sanchez": 2.338,
-      "nieto": 10.92,
-      "belmont": 8.88,
-      "actasRevisadas": 1145,
-      "actasTotal": 2543
+      "pct": 45.301,
+      "fujimori": 15.795,
+      "rla": 29.288,
+      "sanchez": 2.342,
+      "nieto": 10.907,
+      "belmont": 8.882,
+      "actasRevisadas": 1152,
+      "actasTotal": 2543,
+      "totalVotosValidos": 134885,
+      "totalVotosEmitidos": 170955
     }
   ],
   "extranjero": {
     "name": "Extranjero",
-    "pct": 45.026,
-    "fujimori": 15.786,
-    "rla": 29.299,
-    "sanchez": 2.338,
-    "nieto": 10.92,
-    "belmont": 8.88,
-    "actasRevisadas": 1145,
-    "actasTotal": 2543
+    "pct": 45.301,
+    "fujimori": 15.795,
+    "rla": 29.288,
+    "sanchez": 2.342,
+    "nieto": 10.907,
+    "belmont": 8.882,
+    "actasRevisadas": 1152,
+    "actasTotal": 2543,
+    "totalVotosValidos": 134885,
+    "totalVotosEmitidos": 170955
   },
   "series": [
     {
@@ -333,18 +387,19 @@
     }
   ],
   "projection": {
-    "fujimori": 17.041,
-    "rla": 11.851,
-    "sanchez": 12.07,
-    "nieto": 11.059,
-    "belmont": 10.152
+    "fujimori": 17.129,
+    "rla": 12.004,
+    "sanchez": 11.942,
+    "nieto": 11.019,
+    "belmont": 10.108
   },
+  "projectionMethod": "regional-weighted",
   "votes": {
-    "fujimori": 2640483,
-    "rla": 1836221,
-    "sanchez": 1870182,
-    "nieto": 1713511,
-    "belmont": 1572965
+    "fujimori": 2641071,
+    "rla": 1836526,
+    "sanchez": 1870470,
+    "nieto": 1713708,
+    "belmont": 1573152
   },
   "probabilities": {
     "fujimori": 99,
@@ -353,6 +408,6 @@
     "nieto": 0,
     "belmont": 0
   },
-  "_scrapedAt": "2026-04-15T23:00:21.282Z",
+  "_scrapedAt": "2026-04-15T23:46:31.735Z",
   "_source": "resultadoelectoral.onpe.gob.pe"
 }
