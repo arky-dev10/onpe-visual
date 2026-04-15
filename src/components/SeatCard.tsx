@@ -1,5 +1,6 @@
 import type { SeatInfo } from './Hemicycle';
 import { nombreCorto } from '../data/senadoSource';
+import { CandidatePhoto } from './CandidatePhoto';
 
 interface Props {
   seat: SeatInfo;
@@ -7,59 +8,90 @@ interface Props {
 }
 
 export function SeatCard({ seat, onClose }: Props) {
+  const { color, partyName, partyCodigo, candidatoNombre, candidatoDni, votosPreferenciales, distrito, orderInParty, partidoPct, partidoVotos, partidoEscanos } = seat;
+  const hasCandidato = !!candidatoNombre;
+  const pctDelPartido = (hasCandidato && partidoVotos && votosPreferenciales != null)
+    ? (votosPreferenciales / partidoVotos) * 100
+    : null;
+
   return (
     <div className="seat-card-overlay" onClick={onClose}>
-      <div className="seat-card" onClick={e => e.stopPropagation()} style={{ '--c': seat.color } as React.CSSProperties}>
+      <div className="seat-card-v2" onClick={e => e.stopPropagation()} style={{ '--c': color } as React.CSSProperties}>
         <button className="seat-card-close" onClick={onClose} aria-label="Cerrar">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
             <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
           </svg>
         </button>
 
-        <div className="seat-card-badge">
-          <span className="seat-card-bullet" />
-          ESCAÑO PROYECTADO
+        {/* Header con color de partido */}
+        <div className="seat-card-head">
+          <div className="seat-card-kicker">
+            <span className="seat-card-bullet" />
+            ESCAÑO PROYECTADO
+          </div>
         </div>
 
-        {seat.candidatoNombre ? (
-          <>
-            <div className="seat-card-name">{seat.candidatoNombre}</div>
-            <div className="seat-card-party">{nombreCorto(seat.partyName)}</div>
-          </>
-        ) : (
-          <>
-            <div className="seat-card-name" style={{ fontSize: 18 }}>{nombreCorto(seat.partyName)}</div>
-            <div className="seat-card-party" style={{ fontSize: 12 }}>Partido político</div>
-          </>
+        {/* Hero: foto + nombre + partido */}
+        <div className="seat-card-hero">
+          <CandidatePhoto dni={candidatoDni} nombre={candidatoNombre || partyName} color={color} size={88} />
+          <div className="seat-card-titles">
+            {hasCandidato ? (
+              <>
+                <div className="seat-card-name">{candidatoNombre}</div>
+                <div className="seat-card-party">{nombreCorto(partyName)}</div>
+              </>
+            ) : (
+              <>
+                <div className="seat-card-name" style={{ fontSize: 20 }}>{nombreCorto(partyName)}</div>
+                <div className="seat-card-party" style={{ opacity: .6, fontSize: 12 }}>Partido · código {partyCodigo}</div>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Stat principal */}
+        {hasCandidato && votosPreferenciales != null && (
+          <div className="seat-card-bignum">
+            <div className="seat-card-bignum-label">VOTOS PREFERENCIALES</div>
+            <div className="seat-card-bignum-value">{votosPreferenciales.toLocaleString('es-PE')}</div>
+            {pctDelPartido != null && (
+              <div className="seat-card-bignum-sub">
+                {pctDelPartido.toFixed(1)}% del voto del partido
+              </div>
+            )}
+          </div>
         )}
 
-        <div className="seat-card-rows">
-          {seat.distrito && (
-            <div className="seat-card-row">
-              <span className="seat-card-key">Distrito electoral</span>
-              <span className="seat-card-val">{seat.distrito}</span>
+        {/* Grid de metadatos */}
+        <div className="seat-card-grid">
+          {distrito && (
+            <div className="seat-card-cell">
+              <div className="seat-card-cell-label">DISTRITO</div>
+              <div className="seat-card-cell-value">{distrito}</div>
             </div>
           )}
-          {seat.candidatoDni && (
-            <div className="seat-card-row">
-              <span className="seat-card-key">DNI</span>
-              <span className="seat-card-val">{seat.candidatoDni}</span>
+          {orderInParty != null && (
+            <div className="seat-card-cell">
+              <div className="seat-card-cell-label">POSICIÓN</div>
+              <div className="seat-card-cell-value">#{orderInParty + 1}{partidoEscanos ? ` de ${partidoEscanos}` : ''}</div>
             </div>
           )}
-          {seat.votosPreferenciales != null && (
-            <div className="seat-card-row">
-              <span className="seat-card-key">Votos preferenciales</span>
-              <span className="seat-card-val" style={{ color: 'var(--c)', fontWeight: 800 }}>
-                {seat.votosPreferenciales.toLocaleString('es-PE')}
-              </span>
+          {candidatoDni && (
+            <div className="seat-card-cell">
+              <div className="seat-card-cell-label">DNI</div>
+              <div className="seat-card-cell-value mono">{candidatoDni}</div>
             </div>
           )}
-          {seat.orderInParty != null && (
-            <div className="seat-card-row">
-              <span className="seat-card-key">Orden en partido</span>
-              <span className="seat-card-val">#{seat.orderInParty + 1}</span>
+          {partidoPct != null && (
+            <div className="seat-card-cell">
+              <div className="seat-card-cell-label">PARTIDO DISTRITAL</div>
+              <div className="seat-card-cell-value" style={{ color: 'var(--c)' }}>{partidoPct.toFixed(2)}%</div>
             </div>
           )}
+        </div>
+
+        <div className="seat-card-footer">
+          Fuente: resultadoelectoral.onpe.gob.pe
         </div>
       </div>
     </div>

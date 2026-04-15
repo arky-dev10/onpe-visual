@@ -5,6 +5,7 @@ import {
 } from '../data/diputadosSource';
 import { Hemicycle, HemicycleLegend, type SeatInfo } from './Hemicycle';
 import { SeatCard } from './SeatCard';
+import { CandidatePhoto } from './CandidatePhoto';
 import { MapPartidos } from './MapPartidos';
 import { ProvinciasView } from './ProvinciasView';
 
@@ -39,6 +40,9 @@ function buildSeatsFromDistrito(d: DistritoDiputados): SeatInfo[] {
         votosPreferenciales: c.votosPreferenciales,
         distrito: d.nombre,
         orderInParty: i,
+        partidoPct: p.pct,
+        partidoVotos: p.votos,
+        partidoEscanos: p.escanos,
       });
     }
   }
@@ -381,46 +385,28 @@ function PartyElectosBlock({
         </span>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 6 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))', gap: 8 }}>
         {electos.map((c, i) => (
           <button
             key={c.dni || i}
             onClick={() => onSeatClick({
-              color,
-              partyCodigo: p.codigo,
-              partyName: p.nombre,
-              candidatoNombre: c.nombre,
-              candidatoDni: c.dni,
+              color, partyCodigo: p.codigo, partyName: p.nombre,
+              candidatoNombre: c.nombre, candidatoDni: c.dni,
               votosPreferenciales: c.votosPreferenciales,
-              distrito: distritoNombre,
-              orderInParty: i,
+              distrito: distritoNombre, orderInParty: i,
+              partidoPct: p.pct, partidoVotos: p.votos, partidoEscanos: p.escanos,
             })}
-            style={{
-              display: 'flex', alignItems: 'center', gap: 8,
-              padding: '6px 8px',
-              background: 'var(--bg-card)', borderRadius: 6,
-              border: '1px solid var(--border)',
-              cursor: 'pointer', textAlign: 'left',
-              transition: 'transform .15s, border-color .15s',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.borderColor = color; }}
-            onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.borderColor = 'var(--border)'; }}
+            className="electo-row"
+            style={{ ['--c' as any]: color }}
           >
-            <div style={{
-              width: 24, height: 24, borderRadius: '50%',
-              background: color, color: '#fff',
-              display: 'grid', placeItems: 'center',
-              fontSize: 10, fontFamily: 'DM Mono', fontWeight: 700,
-              flexShrink: 0,
-            }}>{i + 1}</div>
+            <CandidatePhoto dni={c.dni} nombre={c.nombre} color={color} size={36} ring={false} />
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--tx1)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {c.nombre.split(' ').slice(0, 3).join(' ')}
-              </div>
-              <div style={{ fontSize: 10, color: 'var(--tx3)', fontFamily: 'DM Mono' }}>
-                {c.votosPreferenciales.toLocaleString('es-PE')} pref.
+              <div className="electo-nombre">{c.nombre.split(' ').slice(0, 3).join(' ')}</div>
+              <div className="electo-pref">
+                <span style={{ color }}>{c.votosPreferenciales.toLocaleString('es-PE')}</span> pref.
               </div>
             </div>
+            <div className="electo-rank">{i + 1}</div>
           </button>
         ))}
       </div>

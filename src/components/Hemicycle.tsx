@@ -11,6 +11,10 @@ export interface SeatInfo {
   votosPreferenciales?: number;
   distrito?: string;
   orderInParty?: number;
+  // contexto para la ficha del escaño
+  partidoPct?: number;
+  partidoVotos?: number;
+  partidoEscanos?: number;
 }
 
 interface Props {
