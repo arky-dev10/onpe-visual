@@ -49,8 +49,8 @@ export function CandidatePhoto({ dni, nombre, color, size = 48, ring = true }: P
   return (
     <div style={common}>
       <span style={{
-        fontFamily: 'DM Mono, monospace',
-        fontWeight: 800,
+        fontFamily: 'JetBrains Mono, monospace',
+        fontWeight: 600,
         fontSize: Math.max(10, Math.round(size * 0.33)),
         color: '#fff',
         letterSpacing: '-0.5px',

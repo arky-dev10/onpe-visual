@@ -117,7 +117,7 @@ export function MapExplorer({ data, onSeatClick }: Props) {
           </>
         )}
 
-        <div style={{ marginLeft: 'auto', fontSize: 11, color: 'var(--tx3)', fontFamily: 'DM Mono, monospace' }}>
+        <div style={{ marginLeft: 'auto', fontSize: 11, color: 'var(--tx3)', fontFamily: 'JetBrains Mono, monospace' }}>
           {level === 'pais' && `${data.distritos.length} distritos · ${data.totalEscanos} escaños`}
           {level === 'distrito' && dept && `${dept.escanos} escaños · ${dept.pctActas.toFixed(1)}% actas`}
         </div>
@@ -201,7 +201,7 @@ const PaisPanel = memo(function PaisPanel({ data, hoverDept, onPick }: { data: D
               <div key={p.codigo} style={{ marginBottom: 8 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 3 }}>
                   <span style={{ fontWeight: 600, color: colorOfPartido(p.codigo) }}>{nombreCorto(p.nombre)}</span>
-                  <span style={{ fontFamily: 'DM Mono', fontWeight: 700, color: 'var(--tx1)' }}>{p.escanos} · {p.pct.toFixed(1)}%</span>
+                  <span style={{ fontFamily: 'JetBrains Mono', fontWeight: 600, color: 'var(--tx1)' }}>{p.escanos} · {p.pct.toFixed(1)}%</span>
                 </div>
                 <div style={{ height: 6, background: 'var(--bg-alt)', borderRadius: 3, overflow: 'hidden' }}>
                   <div style={{ height: '100%', width: `${Math.min(100, p.pct * 2.5)}%`, background: colorOfPartido(p.codigo), borderRadius: 3, transition: 'width .4s' }} />
@@ -224,7 +224,7 @@ const PaisPanel = memo(function PaisPanel({ data, hoverDept, onPick }: { data: D
           <div style={{ marginTop: 16 }}>
             {top.map((p, i) => (
               <div key={p.codigo} style={{ marginBottom: 10, display: 'flex', alignItems: 'center', gap: 10 }}>
-                <div style={{ fontFamily: 'DM Mono', fontWeight: 700, color: 'var(--tx3)', width: 18, fontSize: 12 }}>#{i + 1}</div>
+                <div style={{ fontFamily: 'JetBrains Mono', fontWeight: 600, color: 'var(--tx3)', width: 18, fontSize: 12 }}>#{i + 1}</div>
                 <span style={{ width: 10, height: 10, borderRadius: 3, background: colorOfPartido(p.codigo), flexShrink: 0 }} />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--tx1)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -234,7 +234,7 @@ const PaisPanel = memo(function PaisPanel({ data, hoverDept, onPick }: { data: D
                     <div style={{ height: '100%', width: `${(p.escanos / totSeats) * 100 * 4}%`, background: colorOfPartido(p.codigo), borderRadius: 3 }} />
                   </div>
                 </div>
-                <div style={{ fontFamily: 'DM Mono', fontWeight: 800, fontSize: 16, color: 'var(--tx1)', minWidth: 30, textAlign: 'right' }}>
+                <div style={{ fontFamily: 'JetBrains Mono', fontWeight: 600, fontSize: 16, color: 'var(--tx1)', minWidth: 30, textAlign: 'right' }}>
                   {p.escanos}
                 </div>
               </div>
@@ -312,7 +312,7 @@ const DistritoPanel = memo(function DistritoPanel({ distrito: d, provincias, onS
                   <div className="electo-nombre">{c.nombre.split(' ').slice(0, 3).join(' ')}</div>
                   <div className="electo-pref" style={{ color }}>{nombreCorto(p.nombre)}</div>
                 </div>
-                <div style={{ fontFamily: 'DM Mono', fontWeight: 700, fontSize: 11, color: 'var(--tx3)' }}>
+                <div style={{ fontFamily: 'JetBrains Mono', fontWeight: 600, fontSize: 11, color: 'var(--tx3)' }}>
                   {(c.votosPreferenciales / 1000).toFixed(1)}k
                 </div>
               </button>

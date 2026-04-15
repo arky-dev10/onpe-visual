@@ -132,7 +132,7 @@ export function ProvinciasView({ deptUbigeo, deptNombre, onClose }: { deptUbigeo
             {/* Resumen agregado */}
             {topAggr.length > 0 && (
               <div style={{ padding: '10px 12px', background: 'var(--bg-alt)', borderRadius: 8, marginBottom: 16 }}>
-                <div style={{ fontSize: 10, color: 'var(--tx3)', letterSpacing: 1.5, fontWeight: 700, marginBottom: 6 }}>
+                <div style={{ fontSize: 10, color: 'var(--tx3)', letterSpacing: 1.5, fontWeight: 600, marginBottom: 6 }}>
                   TOP PARTIDOS EN {deptNombre.toUpperCase()}
                 </div>
                 <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', fontSize: 12 }}>
@@ -140,7 +140,7 @@ export function ProvinciasView({ deptUbigeo, deptNombre, onClose }: { deptUbigeo
                     <span key={codigo} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                       <span style={{ width: 10, height: 10, borderRadius: 3, background: colorOf(codigo), display: 'inline-block' }} />
                       <span style={{ fontWeight: 600 }}>{nombreCorto(info.nombre)}</span>
-                      <span style={{ fontFamily: 'DM Mono', color: colorOf(codigo), fontWeight: 700 }}>{info.pct.toFixed(1)}%</span>
+                      <span style={{ fontFamily: 'JetBrains Mono', color: colorOf(codigo), fontWeight: 600 }}>{info.pct.toFixed(1)}%</span>
                     </span>
                   ))}
                 </div>
@@ -169,7 +169,7 @@ export function ProvinciasView({ deptUbigeo, deptNombre, onClose }: { deptUbigeo
                           <div key={pp.codigo}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, marginBottom: 2 }}>
                               <span style={{ color: colorOf(pp.codigo), fontWeight: 600 }}>{nombreCorto(pp.partido)}</span>
-                              <span style={{ fontFamily: 'DM Mono', color: colorOf(pp.codigo), fontWeight: 700 }}>{pp.pct.toFixed(1)}%</span>
+                              <span style={{ fontFamily: 'JetBrains Mono', color: colorOf(pp.codigo), fontWeight: 600 }}>{pp.pct.toFixed(1)}%</span>
                             </div>
                             <div style={{
                               height: 4,

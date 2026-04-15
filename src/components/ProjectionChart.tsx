@@ -60,18 +60,18 @@ export function ProjectionChart({ series, projection, currentPct }: Props) {
         borderWidth: 1,
         titleColor: '#e8eaed',
         bodyColor: '#9aa0ab',
-        bodyFont: { family: 'DM Mono' },
+        bodyFont: { family: 'JetBrains Mono' },
       },
     },
     scales: {
       x: {
         title: { display: true, text: '% de ONPE', color: '#5f6673', font: { size: 10 } },
-        ticks: { color: '#5f6673', font: { family: 'DM Mono', size: 10 } },
+        ticks: { color: '#5f6673', font: { family: 'JetBrains Mono', size: 10 } },
         grid: { color: 'rgba(255,255,255,.04)' },
       },
       y: {
         min: 6, max: 20,
-        ticks: { color: '#5f6673', font: { family: 'DM Mono', size: 10 }, callback: (v:any) => v + '%' },
+        ticks: { color: '#5f6673', font: { family: 'JetBrains Mono', size: 10 }, callback: (v:any) => v + '%' },
         grid: { color: 'rgba(255,255,255,.04)' },
       },
     },

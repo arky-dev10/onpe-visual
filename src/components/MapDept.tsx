@@ -158,7 +158,7 @@ export function MapDept({ regions, source, onSelect }: Props) {
             .attr('x', tx).attr('y', ty + 3)
             .attr('text-anchor', small.dx < 0 ? 'end' : 'start')
             .attr('font-size', fontSize)
-            .attr('font-family', '"DM Mono", monospace')
+            .attr('font-family', '"JetBrains Mono", monospace')
             .attr('font-weight', 600).attr('fill', '#fff')
             .attr('paint-order', 'stroke')
             .attr('stroke', '#0f1117').attr('stroke-width', 2.5)
@@ -170,7 +170,7 @@ export function MapDept({ regions, source, onSelect }: Props) {
             .attr('x', centroid[0]).attr('y', centroid[1] + 3)
             .attr('text-anchor', 'middle')
             .attr('font-size', fontSize)
-            .attr('font-family', '"DM Mono", monospace')
+            .attr('font-family', '"JetBrains Mono", monospace')
             .attr('font-weight', 600).attr('fill', '#fff')
             .attr('paint-order', 'stroke')
             .attr('stroke', 'rgba(15,17,23,.75)').attr('stroke-width', 2.5)
@@ -206,7 +206,7 @@ export function MapDept({ regions, source, onSelect }: Props) {
           .attr('stroke', winColor).attr('stroke-width',.4).attr('opacity',.3);
         extG.append('text').attr('x', gx).attr('y', gy + gr + 12)
           .attr('text-anchor', 'middle').attr('font-size', 9)
-          .attr('font-family', '"DM Mono", monospace').attr('font-weight', 700)
+          .attr('font-family', '"JetBrains Mono", monospace').attr('font-weight', 700)
           .attr('fill', '#fff').text('Extranjero');
       }
 
@@ -239,7 +239,7 @@ export function MapDept({ regions, source, onSelect }: Props) {
           </div>
         )}
       </div>
-      <div style={{ marginTop: 8, fontSize: 11, color: 'var(--tx3)', fontFamily: 'DM Mono, monospace' }}>
+      <div style={{ marginTop: 8, fontSize: 11, color: 'var(--tx3)', fontFamily: 'JetBrains Mono, monospace' }}>
         Fuente: {source}
       </div>
     </>

@@ -57,14 +57,14 @@
   line-height: 1;
 }
 .gob-brand-text strong {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 800;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
   font-size: 20px;
   letter-spacing: 2px;
   color: #1a1a1a;
 }
 .gob-brand-text small {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 500;
   font-size: 10px;
   letter-spacing: 1.5px;
@@ -79,7 +79,7 @@
   justify-content: center;
 }
 .gob-nav-link {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
   font-size: 11px;
   letter-spacing: 1.2px;
@@ -252,12 +252,16 @@ body.theme-pe .container::after { margin: 20px 0 10px; }
 /* ───────────── 2. Reset ───────────── */
 *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
   background: var(--bg);
   color: var(--tx1);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'cv11', 'ss01';
+  letter-spacing: -0.005em;
 }
+h1, h2, h3, h4 { font-weight: 500; letter-spacing: -0.02em; }
+strong, b { font-weight: 600; }
 button { font: inherit; cursor: pointer; }
 
 /* ───────────── 3. Layout ───────────── */
@@ -273,8 +277,8 @@ button { font: inherit; cursor: pointer; }
 }
 .hero-left { min-width: 160px; }
 .brand-goberna {
-  font-family: 'Playfair Display', serif;
-  font-weight: 900;
+  font-family: 'Instrument Serif', serif;
+  font-weight: 600;
   font-size: 14px;
   letter-spacing: 4px;
   background: linear-gradient(135deg, var(--gold-1) 0%, var(--gold-2) 50%, var(--gold-3) 100%);
@@ -284,7 +288,7 @@ button { font: inherit; cursor: pointer; }
   margin-bottom: 6px;
   text-transform: uppercase;
 }
-.hero-title { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: var(--tx1); }
+.hero-title { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; color: var(--tx1); }
 .hero-sub   { font-size: 11px; color: var(--tx3); margin-top: 2px; }
 .hero-center { text-align: center; flex: 1; }
 .hero-label {
@@ -292,8 +296,8 @@ button { font: inherit; cursor: pointer; }
   letter-spacing: 1.5px; color: var(--tx3); margin-bottom: -4px;
 }
 .hero-pct {
-  font-family: 'DM Mono', monospace;
-  font-size: 72px; font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 72px; font-weight: 600;
   line-height: 1; letter-spacing: -3px;
   background: linear-gradient(135deg, var(--c-rla) 0%, var(--c-nieto) 100%);
   -webkit-background-clip: text;
@@ -324,9 +328,13 @@ button { font: inherit; cursor: pointer; }
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 0;
-  max-width: 440px; width: 100%;
+  max-width: 440px;
+  width: 100%;
+  min-width: 0;
+  max-height: 90vh;
+  overflow-y: auto;
+  overflow-x: hidden;
   position: relative;
-  overflow: hidden;
   box-shadow:
     0 1px 3px rgba(0,0,0,.1),
     0 20px 50px rgba(0,0,0,.25);
@@ -360,7 +368,7 @@ button { font: inherit; cursor: pointer; }
 }
 .seat-card-kicker {
   display: inline-flex; align-items: center; gap: 8px;
-  font-size: 10px; font-weight: 800; letter-spacing: 2.5px;
+  font-size: 10px; font-weight: 600; letter-spacing: 2.5px;
   text-transform: uppercase;
   color: rgba(255,255,255,.85);
 }
@@ -382,7 +390,10 @@ button { font: inherit; cursor: pointer; }
   margin-top: -48px;
   position: relative;
   z-index: 2;
+  min-width: 0;
 }
+.seat-card-titles { min-width: 0; }
+.seat-card-name { overflow-wrap: anywhere; }
 .seat-card-hero > :first-child {
   box-shadow: 0 8px 24px rgba(0,0,0,0.25), 0 0 0 4px var(--bg-card);
 }
@@ -393,7 +404,7 @@ button { font: inherit; cursor: pointer; }
 }
 .seat-card-name {
   font-size: 20px;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: -0.3px;
   line-height: 1.15;
   color: var(--tx1);
@@ -401,7 +412,7 @@ button { font: inherit; cursor: pointer; }
 }
 .seat-card-party {
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 1.2px;
   text-transform: uppercase;
   color: var(--c);
@@ -417,14 +428,14 @@ button { font: inherit; cursor: pointer; }
   text-align: center;
 }
 .seat-card-bignum-label {
-  font-size: 9px; font-weight: 700; letter-spacing: 2px;
+  font-size: 9px; font-weight: 600; letter-spacing: 2px;
   color: var(--tx3);
   text-transform: uppercase;
   margin-bottom: 4px;
 }
 .seat-card-bignum-value {
-  font-family: 'DM Mono', monospace;
-  font-size: 32px; font-weight: 800;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 32px; font-weight: 600;
   letter-spacing: -1px;
   color: var(--c);
   line-height: 1;
@@ -454,24 +465,24 @@ button { font: inherit; cursor: pointer; }
 .seat-card-cell:nth-child(2n)       { border-right: none; }
 .seat-card-cell:nth-last-child(-n+2){ border-bottom: none; }
 .seat-card-cell-label {
-  font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
+  font-size: 9px; font-weight: 600; letter-spacing: 1.5px;
   text-transform: uppercase;
   color: var(--tx3);
   margin-bottom: 3px;
 }
 .seat-card-cell-value {
-  font-size: 13px; font-weight: 700;
+  font-size: 13px; font-weight: 600;
   color: var(--tx1);
   line-height: 1.2;
 }
-.seat-card-cell-value.mono { font-family: 'DM Mono', monospace; font-weight: 600; }
+.seat-card-cell-value.mono { font-family: 'JetBrains Mono', monospace; font-weight: 600; }
 
 .seat-card-footer {
   text-align: center;
   padding: 14px 22px 18px;
   font-size: 10px;
   color: var(--tx3);
-  font-family: 'DM Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   letter-spacing: 0.3px;
 }
 
@@ -481,7 +492,7 @@ button { font: inherit; cursor: pointer; }
   padding: 12px 18px;
   border-bottom: 1px solid var(--border);
   background: var(--bg-alt);
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 .crumb {
   display: inline-flex; align-items: center; gap: 6px;
@@ -530,13 +541,13 @@ button { font: inherit; cursor: pointer; }
 
 .panel-wrap { animation: fadeUp .3s ease; }
 .panel-kicker {
-  font-size: 10px; font-weight: 800; letter-spacing: 2px;
+  font-size: 10px; font-weight: 600; letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--tx3);
   margin-bottom: 6px;
 }
 .panel-title {
-  font-size: 22px; font-weight: 800;
+  font-size: 22px; font-weight: 600;
   letter-spacing: -0.4px;
   color: var(--tx1);
   line-height: 1.1;
@@ -545,11 +556,11 @@ button { font: inherit; cursor: pointer; }
 .panel-sub {
   font-size: 12px;
   color: var(--tx3);
-  font-family: 'DM Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   margin-bottom: 14px;
 }
 .panel-subtitle {
-  font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+  font-size: 10px; font-weight: 600; letter-spacing: 1.5px;
   text-transform: uppercase;
   color: var(--tx3);
   margin: 14px 0 8px;
@@ -578,8 +589,8 @@ button { font: inherit; cursor: pointer; }
   color: #1a1a1a;
   border: none;
   border-radius: 10px;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
   font-size: 12px;
   letter-spacing: 1.2px;
   cursor: pointer;
@@ -627,21 +638,21 @@ button { font: inherit; cursor: pointer; }
 }
 .electo-row:hover::before { opacity: 1; }
 .electo-nombre {
-  font-size: 12px; font-weight: 700;
+  font-size: 12px; font-weight: 600;
   color: var(--tx1);
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   letter-spacing: -0.1px;
 }
 .electo-pref {
-  font-family: 'DM Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
   color: var(--tx3);
   font-weight: 600;
   margin-top: 1px;
 }
 .electo-rank {
-  font-family: 'DM Mono', monospace;
-  font-weight: 800;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
   font-size: 11px;
   color: var(--c);
   background: color-mix(in srgb, var(--c) 12%, transparent);
@@ -699,8 +710,8 @@ button { font: inherit; cursor: pointer; }
   text-overflow: ellipsis;
 }
 .hemi-legend-seats {
-  font-family: 'DM Mono', monospace;
-  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
   font-size: 13px;
   color: var(--tx1);
   min-width: 22px;
@@ -736,14 +747,14 @@ button { font: inherit; cursor: pointer; }
 }
 .distrito-name {
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: .3px;
   color: var(--tx1);
 }
 .distrito-meta {
   font-size: 11px;
   color: var(--tx3);
-  font-family: 'DM Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
 }
 .distrito-seats-row {
   display: flex;
@@ -759,7 +770,7 @@ button { font: inherit; cursor: pointer; }
 }
 .distrito-ganador {
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -767,7 +778,7 @@ button { font: inherit; cursor: pointer; }
 }
 .distrito-ganador-pct {
   margin-left: auto;
-  font-family: 'DM Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   color: var(--tx3);
 }
 
@@ -783,7 +794,7 @@ button { font: inherit; cursor: pointer; }
   text-align: left;
   color: var(--tx3);
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 1.5px;
   border-bottom: 2px solid var(--border);
 }
@@ -793,7 +804,7 @@ button { font: inherit; cursor: pointer; }
   border-bottom: 1px solid var(--border);
   vertical-align: middle;
 }
-.senado-table td.tr { text-align: right; font-family: 'DM Mono', monospace; }
+.senado-table td.tr { text-align: right; font-family: 'JetBrains Mono', monospace; }
 .senado-table tr.under-valla { opacity: .45; }
 .senado-bar {
   position: relative;
@@ -934,7 +945,7 @@ button { font: inherit; cursor: pointer; }
   display: inline-flex; align-items: center; gap: 5px;
   padding: 3px 8px; border-radius: 6px;
   background: rgba(255,255,255,0.03);
-  font-family: 'DM Mono', monospace; font-size: 11px;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
 }
 .jee-badge svg  { color: var(--c-fuji); width: 12px; height: 12px; opacity: .8; }
 .timer-badge svg{ color: var(--c-nieto); width: 12px; height: 12px; opacity: .8; }
@@ -994,23 +1005,23 @@ button { font: inherit; cursor: pointer; }
   background: var(--cand-bg);
   border: 1.5px solid var(--cand-color);
   display: grid; place-items: center;
-  font-family: 'DM Mono', monospace; font-weight: 700;
+  font-family: 'JetBrains Mono', monospace; font-weight: 600;
   font-size: 11px; color: var(--cand-color);
   flex-shrink: 0;
 }
 .cand-name {
-  font-size: 10px; font-weight: 700;
+  font-size: 10px; font-weight: 600;
   letter-spacing: 1px; color: var(--tx2);
 }
 .cand-pct {
-  font-family: 'DM Mono', monospace;
-  font-size: 22px; font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px; font-weight: 600;
   color: var(--cand-color);
   letter-spacing: -1px;
 }
 .cand-trend {
   display: inline-flex; align-items: center; gap: 2px;
-  font-family: 'DM Mono', monospace; font-size: 11px;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
   margin-left: 4px;
   color: var(--cand-color);
 }
@@ -1023,7 +1034,7 @@ button { font: inherit; cursor: pointer; }
 .cand-foot {
   margin-top: 6px;
   font-size: 10px; color: var(--tx3);
-  font-family: 'DM Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   display: flex; justify-content: space-between;
 }
 .cand-foot .delta { color: var(--cand-color); font-weight: 600; }
@@ -1039,33 +1050,49 @@ button { font: inherit; cursor: pointer; }
   animation: fadeUp .5s ease .35s forwards;
 }
 .prob-title {
-  font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+  font-size: 10px; font-weight: 600; letter-spacing: 1.5px;
   color: var(--tx3); text-transform: uppercase;
   margin-bottom: 10px;
 }
-.prob-bar {
-  display: flex;
-  height: 8px;
-  border-radius: 4px;
-  overflow: hidden;
-  background: var(--bg-alt);
-  margin-bottom: 8px;
-}
-.prob-fill {
-  height: 100%;
-  transition: width 1s cubic-bezier(.25,.8,.25,1);
-  animation: barGrow 1.2s cubic-bezier(.25,.8,.25,1) forwards;
-  transform-origin: left;
-}
 @keyframes barGrow { from { transform: scaleX(0);} to { transform: scaleX(1);} }
-.prob-legend {
-  display: flex; justify-content: space-between; gap: 12px;
-  font-size: 11px; color: var(--tx2); flex-wrap: wrap;
+
+/* 3 filas: una barra horizontal por candidato mostrando su probabilidad individual */
+.prob-rows { display: flex; flex-direction: column; gap: 10px; }
+.prob-row { display: flex; flex-direction: column; gap: 6px; }
+.prob-row-head {
+  display: flex; align-items: baseline; gap: 10px;
+  font-size: 12px;
 }
-.prob-legend span { display: inline-flex; align-items: center; gap: 5px; }
-.prob-legend i {
-  width: 8px; height: 8px; border-radius: 2px;
-  display: inline-block;
+.prob-row-rank {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--tx3);
+  font-weight: 600;
+  letter-spacing: .5px;
+}
+.prob-row-name {
+  flex: 1;
+  color: var(--tx1);
+  font-weight: 500;
+}
+.prob-row-pct {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--c);
+}
+.prob-row-track {
+  height: 6px;
+  background: var(--bg-alt);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.prob-row-fill {
+  height: 100%;
+  border-radius: 3px;
+  transform-origin: left;
+  animation: barGrow 1s cubic-bezier(.25,.8,.25,1);
+  transition: width .6s cubic-bezier(.25,.8,.25,1);
 }
 
 /* ───────────── 10. Cards grid ───────────── */
@@ -1086,12 +1113,12 @@ button { font: inherit; cursor: pointer; }
 }
 .card:nth-child(2) { animation-delay: .35s; }
 .card-title {
-  font-size: 12px; font-weight: 700;
+  font-size: 12px; font-weight: 600;
   color: var(--tx2); margin-bottom: 4px;
 }
 .card-sub {
   font-size: 11px; color: var(--tx3);
-  font-family: 'DM Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   margin-bottom: 12px;
 }
 
@@ -1139,7 +1166,7 @@ button { font: inherit; cursor: pointer; }
   padding-top: 10px;
   font-size: 11px;
   color: var(--tx3);
-  font-family: 'DM Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
 }
 .proj-summary .lead { color: var(--tx2); font-weight: 600; }
 
@@ -1172,8 +1199,8 @@ button { font: inherit; cursor: pointer; }
   transition: background .15s;
 }
 .modal-close:hover { background: rgba(255,255,255,.08); }
-.modal h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-.modal .region-sub { font-size: 11px; color: var(--tx3); margin-bottom: 16px; font-family: 'DM Mono', monospace; }
+.modal h3 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+.modal .region-sub { font-size: 11px; color: var(--tx3); margin-bottom: 16px; font-family: 'JetBrains Mono', monospace; }
 .modal-row {
   display: flex; align-items: center; gap: 10px;
   padding: 8px 0;
@@ -1188,7 +1215,7 @@ button { font: inherit; cursor: pointer; }
 .modal-row:nth-child(5){ animation-delay: .25s; }
 .modal-row .dot { width: 10px; height: 10px; border-radius: 3px; }
 .modal-row .name { flex: 1; font-size: 13px; font-weight: 600; }
-.modal-row .pct { font-family: 'DM Mono', monospace; font-weight: 700; font-size: 13px; }
+.modal-row .pct { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 13px; }
 .modal-bar {
   height: 6px; border-radius: 3px;
   transition: width .6s cubic-bezier(.25,.8,.25,1);
@@ -1230,7 +1257,7 @@ button { font: inherit; cursor: pointer; }
 }
 .sv-left { position: relative; }
 .sv-kicker {
-  font-size: 10px; font-weight: 700; letter-spacing: 2px;
+  font-size: 10px; font-weight: 600; letter-spacing: 2px;
   text-transform: uppercase;
   background: linear-gradient(90deg, var(--c-fuji), var(--c-rla));
   -webkit-background-clip: text;
@@ -1239,8 +1266,8 @@ button { font: inherit; cursor: pointer; }
   margin-bottom: 4px;
 }
 .sv-date {
-  font-size: 13px; font-weight: 700; color: var(--tx1);
-  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 600; color: var(--tx1);
+  font-family: 'Inter', sans-serif;
 }
 .sv-center {
   display: grid;
@@ -1263,38 +1290,38 @@ button { font: inherit; cursor: pointer; }
   background: var(--cbg);
   border: 2px solid var(--c);
   display: grid; place-items: center;
-  font-family: 'DM Mono', monospace;
-  font-weight: 700; font-size: 13px; color: var(--c);
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600; font-size: 13px; color: var(--c);
   margin-bottom: 2px;
 }
 .sv-name {
-  font-size: 13px; font-weight: 700; color: var(--tx1);
+  font-size: 13px; font-weight: 600; color: var(--tx1);
 }
 .sv-pct {
-  font-family: 'DM Mono', monospace;
-  font-size: 24px; font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px; font-weight: 600;
   color: var(--c);
   letter-spacing: -1px;
 }
 .sv-party {
   font-size: 10px; color: var(--tx3);
-  font-family: 'DM Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
 }
 .sv-vs {
-  font-family: 'Playfair Display', serif;
-  font-size: 28px; font-weight: 900;
+  font-family: 'Instrument Serif', serif;
+  font-size: 28px; font-weight: 600;
   color: var(--tx3);
   letter-spacing: 2px;
 }
 .sv-right { position: relative; text-align: right; }
 .sv-countdown-label {
-  font-size: 10px; font-weight: 700; letter-spacing: 2px;
+  font-size: 10px; font-weight: 600; letter-spacing: 2px;
   text-transform: uppercase; color: var(--tx3);
   margin-bottom: 4px;
 }
 .sv-countdown {
   display: flex; justify-content: flex-end; gap: 6px;
-  font-family: 'DM Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
 }
 .sv-countdown > span {
   display: flex; flex-direction: column; align-items: center;
@@ -1304,7 +1331,7 @@ button { font: inherit; cursor: pointer; }
   border-radius: 6px;
 }
 .sv-countdown b {
-  font-size: 18px; font-weight: 700; color: var(--tx1);
+  font-size: 18px; font-weight: 600; color: var(--tx1);
   line-height: 1;
 }
 .sv-countdown i {
@@ -1338,24 +1365,24 @@ button { font: inherit; cursor: pointer; }
   50%      { box-shadow: 0 0 0 8px rgba(224,72,72,0); }
 }
 .gap-tag {
-  font-size: 10px; font-weight: 700; letter-spacing: 2px;
+  font-size: 10px; font-weight: 600; letter-spacing: 2px;
   text-transform: uppercase; color: var(--c-sanch);
 }
 .gap-body { margin-top: 10px; }
 .gap-names {
   display: flex; align-items: center; gap: 14px;
-  font-size: 12px; font-weight: 700;
+  font-size: 12px; font-weight: 600;
   margin-bottom: 10px;
 }
-.gap-vs { color: var(--tx3); font-family: 'Playfair Display', serif; font-size: 14px; }
+.gap-vs { color: var(--tx3); font-family: 'Instrument Serif', serif; font-size: 14px; }
 .gap-numbers {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 14px;
 }
 .gap-big {
-  font-family: 'DM Mono', monospace;
-  font-size: 24px; font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px; font-weight: 600;
   color: var(--tx1);
   letter-spacing: -0.5px;
   line-height: 1;

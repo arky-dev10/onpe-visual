@@ -153,7 +153,7 @@ function NacionalTab({ data, onSeatClick }: { data: DiputadosData; onSeatClick: 
               const pct = (votos / totalNac) * 100;
               return (
                 <tr key={p.codigo}>
-                  <td style={{ color: 'var(--tx3)', fontFamily: 'DM Mono', fontWeight: 700 }}>{i + 1}</td>
+                  <td style={{ color: 'var(--tx3)', fontFamily: 'JetBrains Mono', fontWeight: 600 }}>{i + 1}</td>
                   <td>
                     <span style={{ display: 'inline-block', width: 12, height: 12, borderRadius: 3, background: colorOfPartido(p.codigo), marginRight: 10, verticalAlign: 'middle', boxShadow: '0 0 0 1px rgba(0,0,0,.06)' }} />
                     <span style={{ fontWeight: 600 }}>{nombreCorto(p.nombre)}</span>
@@ -161,9 +161,9 @@ function NacionalTab({ data, onSeatClick }: { data: DiputadosData; onSeatClick: 
                       <span className="senado-bar-fill" style={{ width: `${(pct / maxPct) * 100}%`, background: colorOfPartido(p.codigo) }} />
                     </span>
                   </td>
-                  <td style={{ fontFamily: 'DM Mono', color: 'var(--tx2)' }}>{votos.toLocaleString('es-PE')}</td>
+                  <td style={{ fontFamily: 'JetBrains Mono', color: 'var(--tx2)' }}>{votos.toLocaleString('es-PE')}</td>
                   <td className="tr" style={{ fontWeight: 600, color: colorOfPartido(p.codigo) }}>{pct.toFixed(2)}%</td>
-                  <td className="tr" style={{ fontWeight: 800, fontSize: 15 }}>{p.escanos || '—'}</td>
+                  <td className="tr" style={{ fontWeight: 600, fontSize: 15 }}>{p.escanos || '—'}</td>
                 </tr>
               );
             })}

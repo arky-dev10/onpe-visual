@@ -143,9 +143,9 @@ export function Hemicycle({ escanos, partidos, seats, total, size = 'md', onSeat
         x={cx}
         y={cy + dims.centerY}
         textAnchor="middle"
-        fontFamily="'DM Mono', monospace"
+        fontFamily="'JetBrains Mono', monospace"
         fontSize={dims.centerFS}
-        fontWeight="800"
+        fontWeight="600"
         fill="var(--tx1)"
       >
         {total}
@@ -155,7 +155,7 @@ export function Hemicycle({ escanos, partidos, seats, total, size = 'md', onSeat
         y={cy + dims.centerY + 14}
         textAnchor="middle"
         fontSize="9"
-        fontWeight="700"
+        fontWeight="600"
         fill="var(--tx3)"
         letterSpacing="2"
       >

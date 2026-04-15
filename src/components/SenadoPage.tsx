@@ -163,7 +163,7 @@ function NacionalTab({ data, onSeatClick }: { data: SenadoData; onSeatClick: (s:
               const dentro = p.pct >= n.valla;
               return (
                 <tr key={p.codigo} className={dentro ? '' : 'under-valla'}>
-                  <td style={{ color: 'var(--tx3)', fontFamily: 'DM Mono', fontWeight: 700 }}>{i + 1}</td>
+                  <td style={{ color: 'var(--tx3)', fontFamily: 'JetBrains Mono', fontWeight: 600 }}>{i + 1}</td>
                   <td>
                     <span style={{ display: 'inline-block', width: 12, height: 12, borderRadius: 3, background: colorOfPartido(p.codigo), marginRight: 10, verticalAlign: 'middle', boxShadow: '0 0 0 1px rgba(0,0,0,.06)' }} />
                     <span style={{ fontWeight: 600 }}>{nombreCorto(p.nombre)}</span>
@@ -171,9 +171,9 @@ function NacionalTab({ data, onSeatClick }: { data: SenadoData; onSeatClick: (s:
                       <span className="senado-bar-fill" style={{ width: `${(p.pct / maxPct) * 100}%`, background: colorOfPartido(p.codigo) }} />
                     </span>
                   </td>
-                  <td style={{ fontFamily: 'DM Mono', color: 'var(--tx2)' }}>{p.votos.toLocaleString('es-PE')}</td>
+                  <td style={{ fontFamily: 'JetBrains Mono', color: 'var(--tx2)' }}>{p.votos.toLocaleString('es-PE')}</td>
                   <td className="tr" style={{ fontWeight: 600, color: colorOfPartido(p.codigo) }}>{p.pct.toFixed(2)}%</td>
-                  <td className="tr" style={{ fontWeight: 800, fontSize: 15 }}>{seats || '—'}</td>
+                  <td className="tr" style={{ fontWeight: 600, fontSize: 15 }}>{seats || '—'}</td>
                 </tr>
               );
             })}
@@ -291,8 +291,8 @@ function DistritoModal({ distrito: d, onClose, onDrillProvincias, onSeatClick }:
               color: '#1a1a1a',
               border: 'none',
               borderRadius: 8,
-              fontFamily: 'Montserrat, sans-serif',
-              fontWeight: 700,
+              fontFamily: 'Inter, sans-serif',
+              fontWeight: 600,
               fontSize: 12,
               letterSpacing: 1.5,
               cursor: 'pointer',

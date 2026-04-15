@@ -154,7 +154,7 @@ export function MapPartidos({ distritos, onSelect, onHover }: Props) {
           .attr('x', centroid[0]).attr('y', centroid[1] - 2)
           .attr('text-anchor', 'middle')
           .attr('font-size', fontSize)
-          .attr('font-family', '"DM Mono", monospace')
+          .attr('font-family', '"JetBrains Mono", monospace')
           .attr('font-weight', 700)
           .attr('fill', '#fff')
           .attr('paint-order', 'stroke')
@@ -167,7 +167,7 @@ export function MapPartidos({ distritos, onSelect, onHover }: Props) {
           .attr('x', centroid[0]).attr('y', centroid[1] + 8)
           .attr('text-anchor', 'middle')
           .attr('font-size', fontSize - 1)
-          .attr('font-family', '"DM Mono", monospace')
+          .attr('font-family', '"JetBrains Mono", monospace')
           .attr('font-weight', 500)
           .attr('fill', '#fff')
           .attr('paint-order', 'stroke')
@@ -193,7 +193,7 @@ export function MapPartidos({ distritos, onSelect, onHover }: Props) {
           </div>
         )}
       </div>
-      <div style={{ marginTop: 10, fontSize: 11, color: 'var(--tx3)', textAlign: 'center', fontFamily: 'DM Mono, monospace' }}>
+      <div style={{ marginTop: 10, fontSize: 11, color: 'var(--tx3)', textAlign: 'center', fontFamily: 'JetBrains Mono, monospace' }}>
         Click en un departamento para ver provincias
       </div>
     </>

@@ -129,7 +129,7 @@ export function PresidencialExplorer({ regions, source }: Props) {
             <button className={`crumb active`} style={{ cursor: 'default' }}>{dept.name}</button>
           </>
         )}
-        <div style={{ marginLeft: 'auto', fontSize: 11, color: 'var(--tx3)', fontFamily: 'DM Mono, monospace' }}>
+        <div style={{ marginLeft: 'auto', fontSize: 11, color: 'var(--tx3)', fontFamily: 'JetBrains Mono, monospace' }}>
           {source} · {regions.length} regiones
         </div>
       </div>
@@ -253,7 +253,7 @@ const DeptsMap = memo(function DeptsMap({ regions, onSelect, onHover }: {
         labelG.append('text')
           .attr('x', centroid[0]).attr('y', centroid[1] + 3)
           .attr('text-anchor', 'middle')
-          .attr('font-size', 9).attr('font-family', '"DM Mono", monospace').attr('font-weight', 700)
+          .attr('font-size', 9).attr('font-family', '"JetBrains Mono", monospace').attr('font-weight', 700)
           .attr('fill', '#fff').attr('paint-order', 'stroke')
           .attr('stroke', 'rgba(0,0,0,.6)').attr('stroke-width', 2.5)
           .text(`${Math.round(val)}%`)
@@ -302,7 +302,7 @@ const PaisPanel = memo(function PaisPanel({ hoverDept, onPick }: { hoverDept: Re
             <div key={k} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <CandidatePhoto dni={undefined} nombre={c.name} color={c.color} size={32} ring={false} />
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--tx1)' }}>{c.name}</div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--tx1)' }}>{c.name}</div>
                 <div style={{ fontSize: 10, color: 'var(--tx3)' }}>{c.short}</div>
               </div>
               <div style={{ width: 10, height: 10, borderRadius: 2, background: c.color }} />
@@ -333,7 +333,7 @@ const DeptMiniStats = memo(function DeptMiniStats({ region, onPick }: { region: 
             <div key={k} style={{ marginBottom: 8 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 3 }}>
                 <span style={{ fontWeight: 600, color: c.color }}>{c.name}</span>
-                <span style={{ fontFamily: 'DM Mono', fontWeight: 700, color: c.color }}>{v.toFixed(2)}%</span>
+                <span style={{ fontFamily: 'JetBrains Mono', fontWeight: 600, color: c.color }}>{v.toFixed(2)}%</span>
               </div>
               <div style={{ height: 6, background: 'var(--bg-alt)', borderRadius: 3 }}>
                 <div style={{ height: '100%', width: `${(v / maxPct) * 100}%`, background: c.color, borderRadius: 3, transition: 'width .3s' }} />
@@ -379,7 +379,7 @@ const DeptPanel = memo(function DeptPanel({ dept, hoverProv, onBack, regionById 
                   <span style={{ fontWeight: 600, color }}>
                     {p.candidato ? p.candidato.split(' ').slice(0, 3).join(' ') : p.partido.slice(0, 20)}
                   </span>
-                  <span style={{ fontFamily: 'DM Mono', fontWeight: 700, color }}>{p.pct.toFixed(2)}%</span>
+                  <span style={{ fontFamily: 'JetBrains Mono', fontWeight: 600, color }}>{p.pct.toFixed(2)}%</span>
                 </div>
                 <div style={{ height: 6, background: 'var(--bg-alt)', borderRadius: 3 }}>
                   <div style={{ height: '100%', width: `${(p.pct / pctMax) * 100}%`, background: color, borderRadius: 3, transition: 'width .3s' }} />
@@ -411,7 +411,7 @@ const DeptPanel = memo(function DeptPanel({ dept, hoverProv, onBack, regionById 
             <div key={k} style={{ marginBottom: 8 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 3 }}>
                 <span style={{ fontWeight: 600, color: c.color }}>{c.name}</span>
-                <span style={{ fontFamily: 'DM Mono', fontWeight: 700, color: c.color }}>{v.toFixed(2)}%</span>
+                <span style={{ fontFamily: 'JetBrains Mono', fontWeight: 600, color: c.color }}>{v.toFixed(2)}%</span>
               </div>
               <div style={{ height: 6, background: 'var(--bg-alt)', borderRadius: 3 }}>
                 <div style={{ height: '100%', width: `${(v / maxPct) * 100}%`, background: c.color, borderRadius: 3 }} />
