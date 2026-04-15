@@ -1,12 +1,12 @@
 {
-  "pctActas": 91.672,
-  "actasRevisadas": 85040,
+  "pctActas": 91.68,
+  "actasRevisadas": 85048,
   "actasTotal": 92766,
-  "votosEmitidos": 18576570,
-  "votosFaltantes": 1547057,
+  "votosEmitidos": 18578217,
+  "votosFaltantes": 1545708,
   "proximoRefresh": "4:00",
-  "fechaActualizacion": "15-abr., 05:37 p. m.",
-  "jeeStatus": "4,681 actas en JEE",
+  "fechaActualizacion": "15-abr., 05:47 p. m.",
+  "jeeStatus": "4,683 actas en JEE",
   "regions": [
     {
       "name": "Amazonas",
@@ -142,13 +142,13 @@
     },
     {
       "name": "La Libertad",
-      "pct": 92.116,
+      "pct": 92.135,
       "fujimori": 20.243,
       "rla": 8.243,
       "sanchez": 9.44,
       "nieto": 9.86,
       "belmont": 7.092,
-      "actasRevisadas": 4884,
+      "actasRevisadas": 4885,
       "actasTotal": 5302
     },
     {
@@ -164,13 +164,13 @@
     },
     {
       "name": "Lima",
-      "pct": 93.165,
+      "pct": 93.172,
       "fujimori": 17.858,
       "rla": 19.955,
       "sanchez": 3.273,
       "nieto": 15.1,
       "belmont": 9.123,
-      "actasRevisadas": 27248,
+      "actasRevisadas": 27250,
       "actasTotal": 29247
     },
     {
@@ -287,9 +287,9 @@
       "name": "Extranjero",
       "pct": 45.026,
       "fujimori": 15.786,
-      "rla": 29.306,
-      "sanchez": 2.339,
-      "nieto": 10.919,
+      "rla": 29.299,
+      "sanchez": 2.338,
+      "nieto": 10.92,
       "belmont": 8.88,
       "actasRevisadas": 1145,
       "actasTotal": 2543
@@ -299,9 +299,9 @@
     "name": "Extranjero",
     "pct": 45.026,
     "fujimori": 15.786,
-    "rla": 29.306,
-    "sanchez": 2.339,
-    "nieto": 10.919,
+    "rla": 29.299,
+    "sanchez": 2.338,
+    "nieto": 10.92,
     "belmont": 8.88,
     "actasRevisadas": 1145,
     "actasTotal": 2543
@@ -336,15 +336,15 @@
     "fujimori": 17.041,
     "rla": 11.851,
     "sanchez": 12.07,
-    "nieto": 11.058,
+    "nieto": 11.059,
     "belmont": 10.152
   },
   "votes": {
-    "fujimori": 2640258,
-    "rla": 1836148,
-    "sanchez": 1870077,
-    "nieto": 1713299,
-    "belmont": 1572852
+    "fujimori": 2640483,
+    "rla": 1836221,
+    "sanchez": 1870182,
+    "nieto": 1713511,
+    "belmont": 1572965
   },
   "probabilities": {
     "fujimori": 99,
@@ -353,6 +353,6 @@
     "nieto": 0,
     "belmont": 0
   },
-  "_scrapedAt": "2026-04-15T22:54:28.202Z",
+  "_scrapedAt": "2026-04-15T23:00:21.282Z",
   "_source": "resultadoelectoral.onpe.gob.pe"
 }
