@@ -26,16 +26,21 @@
 
 /* ───────────── 1b. Peru light theme ───────────── */
 body.theme-pe {
-  --bg: #f7f5ef;           /* crema sutil */
+  --bg: #ffffff;
   --bg-card: #ffffff;
-  --bg-alt: #f1ede3;
-  --border: rgba(217, 16, 35, 0.10);
-  --tx1: #1a1a1a;
+  --bg-alt: #f7f7f7;
+  --border: rgba(0, 0, 0, 0.08);
+  --tx1: #111111;
   --tx2: #4a4a4a;
-  --tx3: #7a7a7a;
+  --tx3: #888888;
   --gold-1: #b30a1f;
   --gold-2: #d91023;       /* rojo bandera */
   --gold-3: #8a0616;
+}
+body.theme-pe .card,
+body.theme-pe .prob-card,
+body.theme-pe .cand-card {
+  border: 1px solid rgba(0,0,0,0.07);
 }
 body.theme-pe .hero { border-bottom: 2px solid #d91023; }
 body.theme-pe .hero-pct {
