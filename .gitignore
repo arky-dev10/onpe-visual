@@ -28,5 +28,5 @@ inspect_map.mjs
 probe_*.mjs
 onpe_probe.mjs
 
-# datos scrapeados (se regeneran con `bun run scrape`)
-public/data/onpe-history.json
+# nota: public/data/onpe.json y onpe-history.json SÍ se versionan
+# (los actualiza el workflow .github/workflows/scrape-onpe.yml)
