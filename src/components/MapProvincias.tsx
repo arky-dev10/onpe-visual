@@ -58,6 +58,10 @@ export function MapProvincias<T extends ProvinciaLike>({ deptNombre, provincias,
   const svgRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
 
+  const onHoverRef = useRef(onHover);
+  const colorOfRef = useRef(colorOf);
+  useEffect(() => { onHoverRef.current = onHover; colorOfRef.current = colorOf; });
+
   useEffect(() => {
     let cancelled = false;
     async function draw() {
@@ -110,7 +114,7 @@ export function MapProvincias<T extends ProvinciaLike>({ deptNombre, provincias,
           const name = norm(f.properties?.NOMBPROV || '');
           const p = provByName[name];
           if (!p || !p.ganador) return '#2a2d38';
-          return colorOf(p.ganador.codigo);
+          return colorOfRef.current(p.ganador.codigo);
         })
         .attr('stroke', '#fff')
         .attr('stroke-width', 0.7)
@@ -118,11 +122,11 @@ export function MapProvincias<T extends ProvinciaLike>({ deptNombre, provincias,
         .on('mouseenter', function (this: any, _e, f: any) {
           const name = norm(f.properties?.NOMBPROV || '');
           d3.select(this).attr('stroke', '#000').attr('stroke-width', 1.5);
-          onHover?.(provByName[name] || null);
+          onHoverRef.current?.(provByName[name] || null);
         })
         .on('mouseleave', function (this: any) {
           d3.select(this).attr('stroke', '#fff').attr('stroke-width', 0.7);
-          onHover?.(null);
+          onHoverRef.current?.(null);
         });
 
       // Labels: nombre provincia + % ganador
@@ -172,7 +176,7 @@ export function MapProvincias<T extends ProvinciaLike>({ deptNombre, provincias,
     }
     draw();
     return () => { cancelled = true; };
-  }, [deptNombre, provincias, colorOf, onHover]);
+  }, [deptNombre, provincias]);
 
   return (
     <div ref={wrapRef} style={{ width: '100%', aspectRatio: '4/3', position: 'relative', maxHeight: 440 }}>

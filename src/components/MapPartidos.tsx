@@ -59,6 +59,11 @@ export function MapPartidos({ distritos, onSelect, onHover }: Props) {
   const svgRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
 
+  // Latest-ref para callbacks: evita re-render del mapa al cambiar hover/click handlers
+  const onSelectRef = useRef(onSelect);
+  const onHoverRef = useRef(onHover);
+  useEffect(() => { onSelectRef.current = onSelect; onHoverRef.current = onHover; });
+
   useEffect(() => {
     let cancelled = false;
     async function draw() {
@@ -115,18 +120,18 @@ export function MapPartidos({ distritos, onSelect, onHover }: Props) {
           const i = features.indexOf(d as any);
           const deptName = match[i];
           const dist = deptName ? distByName[deptName] : null;
-          if (dist) onSelect(dist);
+          if (dist) onSelectRef.current(dist);
         })
         .on('mouseenter', function (this: any, _e, d: any) {
           const i = features.indexOf(d);
           const deptName = match[i];
           const dist = deptName ? distByName[deptName] : null;
           d3.select(this).attr('stroke', '#000').attr('stroke-width', 2);
-          if (dist) onHover?.(dist);
+          if (dist) onHoverRef.current?.(dist);
         })
         .on('mouseleave', function (this: any) {
           d3.select(this).attr('stroke', '#0f1117').attr('stroke-width', 0.5);
-          onHover?.(null);
+          onHoverRef.current?.(null);
         });
 
       // Etiquetas: ganador + escaños asignados
@@ -176,7 +181,7 @@ export function MapPartidos({ distritos, onSelect, onHover }: Props) {
     }
     draw();
     return () => { cancelled = true; };
-  }, [distritos, onSelect]);
+  }, [distritos]);
 
   return (
     <>

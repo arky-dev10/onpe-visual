@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import {
   colorOfPartido, nombreCorto,
   type DiputadosData, type DistritoDiputados,
@@ -57,8 +57,8 @@ export function MapExplorer({ data, onSeatClick }: Props) {
     return () => { alive = false; };
   }, [level, dept]);
 
-  // Distritos adaptados a MapPartidos
-  const distritosForMap = data.distritos.map(d => ({
+  // Distritos adaptados a MapPartidos — memoizados para no redibujar el mapa
+  const distritosForMap = useMemo(() => data.distritos.map(d => ({
     codigo: d.codigo,
     nombre: d.nombre,
     pctActas: d.pctActas,
@@ -67,17 +67,30 @@ export function MapExplorer({ data, onSeatClick }: Props) {
     partidos: d.partidos.map(p => ({ codigo: p.codigo, nombre: p.nombre, votos: p.votos, pct: p.pct, candidatos: p.totalCandidatos })),
     asignacion: Object.fromEntries(d.partidos.map(p => [p.codigo, p.escanos])),
     ganador: d.ganador,
-  }));
+  })), [data]);
 
-  function goToPais() {
+  const goToPais = useCallback(() => {
     setLevel('pais'); setDept(null); setProvincias(null); setSelProv(null);
-  }
+  }, []);
 
-  function goToDistrito(d: DistritoDiputados) {
+  const goToDistrito = useCallback((d: DistritoDiputados) => {
     setLevel('distrito');
     setDept(d);
     setSelProv(null);
-  }
+  }, []);
+
+  // Handlers estables para el mapa país
+  const distritoById = useMemo(() => new Map(data.distritos.map(d => [d.codigo, d])), [data]);
+  const handleMapSelect = useCallback((d: any) => {
+    const orig = distritoById.get(d.codigo);
+    if (orig) goToDistrito(orig);
+  }, [distritoById, goToDistrito]);
+  const handleMapHover = useCallback((d: any) => {
+    setHoverDept(d ? (distritoById.get(d.codigo) || null) : null);
+  }, [distritoById]);
+
+  // Color presidencial (ref estable)
+  const presidencialColorOf = useCallback((cod: string) => PRESIDENCIAL_COLORS[cod] || '#6b7280', []);
 
   return (
     <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
@@ -116,14 +129,8 @@ export function MapExplorer({ data, onSeatClick }: Props) {
           {level === 'pais' && (
             <MapPartidos
               distritos={distritosForMap as any}
-              onSelect={(d: any) => {
-                const orig = data.distritos.find(x => x.codigo === d.codigo);
-                if (orig) goToDistrito(orig);
-              }}
-              onHover={(d: any) => {
-                const orig = d ? data.distritos.find(x => x.codigo === d.codigo) : null;
-                setHoverDept(orig || null);
-              }}
+              onSelect={handleMapSelect}
+              onHover={handleMapHover}
             />
           )}
           {level === 'distrito' && dept && (
@@ -137,8 +144,8 @@ export function MapExplorer({ data, onSeatClick }: Props) {
                 <MapProvincias
                   deptNombre={dept.nombre}
                   provincias={provincias}
-                  colorOf={(cod: string) => PRESIDENCIAL_COLORS[cod] || '#6b7280'}
-                  onHover={(pr: Provincia | null) => setSelProv(pr)}
+                  colorOf={presidencialColorOf}
+                  onHover={setSelProv}
                 />
               )}
               {!loadingProv && !provincias && (
@@ -178,7 +185,7 @@ const PRESIDENCIAL_COLORS: Record<string, string> = {
 };
 
 // ───────────────── Panel nivel país ─────────────────
-function PaisPanel({ data, hoverDept, onPick }: { data: DiputadosData; hoverDept: DistritoDiputados | null; onPick: (d: DistritoDiputados) => void }) {
+const PaisPanel = memo(function PaisPanel({ data, hoverDept, onPick }: { data: DiputadosData; hoverDept: DistritoDiputados | null; onPick: (d: DistritoDiputados) => void }) {
   const top = data.resumenPartidos.slice(0, 6);
   const totSeats = data.totalEscanos;
 
@@ -243,10 +250,10 @@ function PaisPanel({ data, hoverDept, onPick }: { data: DiputadosData; hoverDept
       )}
     </div>
   );
-}
+});
 
 // ───────────────── Panel nivel distrito ─────────────────
-function DistritoPanel({ distrito: d, provincias, selProv, onSeatClick, onBack }: {
+const DistritoPanel = memo(function DistritoPanel({ distrito: d, provincias, selProv, onSeatClick, onBack }: {
   distrito: DistritoDiputados;
   provincias: Provincia[] | null;
   selProv: Provincia | null;
@@ -364,4 +371,4 @@ function DistritoPanel({ distrito: d, provincias, selProv, onSeatClick, onBack }
       )}
     </div>
   );
-}
+});
