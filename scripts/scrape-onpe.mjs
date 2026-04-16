@@ -206,8 +206,13 @@ async function scrape() {
     }
     return out;
   }
-  const projection = computeProjection(regions);
-  console.log(`  proyección 100%: ${CAND_KEYS.map(k => `${k.slice(0,4)}=${projection[k].toFixed(2)}`).join(' ')} (vs actual ${CAND_KEYS.map(k => byKey[k].toFixed(2)).join('/')})`);
+  // Calculamos la proyección por debugging/auditoría pero la mantenemos aparte.
+  // El campo `projection` que consume el frontend ahora SOLO contiene los % reales
+  // oficiales de ONPE — sin extrapolación.
+  const projectionExtrapolada = computeProjection(regions);
+  const projection = { ...byKey };  // valores oficiales reales
+  console.log(`  oficial: ${CAND_KEYS.map(k => `${k.slice(0,4)}=${byKey[k].toFixed(3)}`).join(' ')}`);
+  console.log(`  (extrapolación 100% — solo log): ${CAND_KEYS.map(k => `${k.slice(0,4)}=${projectionExtrapolada[k].toFixed(2)}`).join(' ')}`);
 
   // 5. Probabilidades por ranking
   const ranking = [...CAND_KEYS].sort((a, b) => byKey[b] - byKey[a]);
@@ -236,8 +241,9 @@ async function scrape() {
     regions,
     extranjero: extranjero || regions[0],
     series,
-    projection,
-    projectionMethod: 'regional-weighted',
+    projection,                     // ← % reales oficiales ONPE (no extrapolados)
+    projectionMethod: 'oficial',
+    projectionExtrapolada,           // ← guardamos la extrapolación regional por si se quiere usar
     votes: { ...votesByKey },
     probabilities: probs,
     _scrapedAt: new Date().toISOString(),
